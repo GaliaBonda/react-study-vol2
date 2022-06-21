@@ -50,7 +50,7 @@ export default class Board extends React.Component<any, StateType> {
             <div className="board-container">
                 <h1 className="board__title">{this.state.title}!</h1>
             <ul className="board__list">{lists}</ul>
-            <button className="board__btn">+ list</button>
+            <button className="board__btn">Add list</button>
             </div>
             
 
