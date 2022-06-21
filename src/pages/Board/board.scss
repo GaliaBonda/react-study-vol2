@@ -1,0 +1,29 @@
+.board {
+    width: 20em;
+    overflow: auto;
+    min-height: 10em;
+    border: 2px solid black;
+    padding: 1em;
+    margin: 2em auto;
+    
+    &__title {
+        font-weight: 600;
+        text-transform: uppercase;
+        text-align: center;
+        font-size: 1.5rem;
+    }
+
+    &__list {
+        display: flex;
+        padding: 0;
+        list-style-type: none;
+        gap: 0.5em;
+    }
+
+    &__btn {
+        border: 1px solid black;
+        background-color: white;
+        border-radius: 3%;
+        padding: 0.5em;
+    }
+}
