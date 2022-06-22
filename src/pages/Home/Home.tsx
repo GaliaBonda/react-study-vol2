@@ -24,7 +24,15 @@ export default class Home extends React.Component<any, StateType> {
     }
   render() {
     let boards = this.state.boards.map((item, index) => {
-        return <Board title={item.title} key={index}/>
+        return (
+            <Link
+            to={`/board/${index}`}
+            key={index}
+          >
+            <Board title={item.title}/>
+          </Link>
+        
+        );
     });
     return (
         <div className="home">
