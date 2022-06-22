@@ -1,6 +1,7 @@
 import React from "react";
 import List from "./components/List/List";
 import './board.scss'
+import { Link } from "react-router-dom";
 
 type StateType = {
     title: string;
@@ -42,17 +43,18 @@ export default class Board extends React.Component<any, StateType> {
         this.state = state;
     }
 
-    render() { 
+    render() {
         let lists = this.state.lists.map((item, index) => {
-           return <List title={item.title} cards={item.cards} key={index}></List>
+            return <List title={item.title} cards={item.cards} key={index}></List>
         });
         return (<div className="board">
+            <Link className="board__link" to="/">Home</Link>
             <div className="board-container">
                 <h1 className="board__title">{this.state.title}!</h1>
-            <ul className="board__list">{lists}</ul>
-            <button className="board__btn">Add list</button>
+                <ul className="board__list">{lists}</ul>
+                <button className="board__btn btn">Add list</button>
             </div>
-            
+
 
         </div>);
     }

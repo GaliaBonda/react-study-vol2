@@ -1,4 +1,4 @@
-.board {
+.board-container {
     width: 25em;
     overflow: auto;
     min-height: 10em;
@@ -6,7 +6,10 @@
         box-shadow: 2px 2px 15px 1px rgba(0, 0, 0, 0.1);
     padding: 2em;
     margin: 2em auto;
-    
+    position: relative;
+    }
+
+.board {
     &__title {
         font-weight: 600;
         text-transform: uppercase;
@@ -21,11 +24,18 @@
         gap: 0.5em;
     }
 
-    &__btn {
-        border: 1px solid rgba(0, 0, 0, 0.1);
-        box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, 0.1);
-        background-color: white;
-        border-radius: 3%;
-        padding: 0.5em;
+    // &__btn {
+    //     border: 1px solid rgba(0, 0, 0, 0.1);
+    //     box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, 0.1);
+    //     background-color: white;
+    //     border-radius: 3%;
+    //     padding: 0.5em;
+    // }
+
+    &__link {
+        position: absolute;
+        top: 1em;
+        left: 1em;
+        color: black;
     }
 }

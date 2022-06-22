@@ -2,4 +2,43 @@
 *::after,
 *::before {
     box-sizing: border-box;
+    font-size: 1rem;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.btn {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    border-radius: 3%;
+    padding: 0.5em;
+}
+
+.home {
+    padding: 4em 2em;
+    position: relative;
+    &__list {
+        
+        display: flex;
+        gap: 2em;
+
+    }
+    &__link {
+        color: black;
+        position: absolute;
+        top: 1em;
+        left: 1em;
+    }
+    &__btn {
+        display: block;
+        margin-top: 3em;
+    }
 }

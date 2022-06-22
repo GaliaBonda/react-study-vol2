@@ -14,7 +14,7 @@ export default function List(props: PropsType) {
     return (<li className="list">
         <h2 className="list__title">{props.title}</h2>
         <ul className="list__list">{cards}</ul>
-        <button className="list__btn">+</button>
+        <button className="btn list__btn">+</button>
     </li>)
   }
   
