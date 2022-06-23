@@ -1,7 +1,9 @@
 import React from "react";
 import List from "./components/List/List";
 import './board.scss'
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { withRouter } from "../../common/utils/withRouter";
+
 
 type StateType = {
     title: string;
@@ -36,21 +38,38 @@ let state = {
         }
     ]
 };
+let boardId:string;
 
-export default class Board extends React.Component<any, StateType> {
+class Board extends React.Component<any, StateType> {
     constructor(props: any) {
         super(props);
         this.state = state;
+    }
+
+    componentDidMount() {
+        // let { board_id } = this.props.params;
+        boardId = this.props.params.boardID;
+        console.log(this.props.params);
+        
+        
+        // if (board_id) {
+        //     console.log(board_id);
+        //     boardId = board_id;
+        // }
     }
 
     render() {
         let lists = this.state.lists.map((item, index) => {
             return <List title={item.title} cards={item.cards} key={index}></List>
         });
+        
+        
+        //  const { board_id } = useParams();
+
         return (<div className="board">
             <Link className="board__link" to="/">Home</Link>
             <div className="board-container">
-                <h1 className="board__title">{this.state.title}!</h1>
+                <h1 className="board__title">{this.state.title} {boardId}!</h1>
                 <ul className="board__list">{lists}</ul>
                 <button className="board__btn btn">Add list</button>
             </div>
@@ -59,3 +78,5 @@ export default class Board extends React.Component<any, StateType> {
         </div>);
     }
 }
+
+export default withRouter(Board);

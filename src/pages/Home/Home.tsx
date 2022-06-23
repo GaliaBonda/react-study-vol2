@@ -29,7 +29,7 @@ export default class Home extends React.Component<any, StateType> {
             to={`/board/${index}`}
             key={index}
           >
-            <Board title={item.title}/>
+            <Board title={item.title} />
           </Link>
         
         );
