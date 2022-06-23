@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { withRouter } from "../../common/utils/withRouter";
 
 
-type StateType = {
+type stateType = {
     title: string;
     lists: Array<any>;
     boardId: number | null;
@@ -42,7 +42,7 @@ let state = {
 };
 // let boardId:string;
 
-class Board extends React.Component<any, StateType> {
+class Board extends React.Component<any, stateType> {
     constructor(props: any) {
         super(props);
         this.state = state;

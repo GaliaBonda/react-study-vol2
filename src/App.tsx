@@ -1,14 +1,24 @@
 import React from 'react';
 
 import './App.scss';
-import {Link } from 'react-router-dom';
+import {BrowserRouter, Link, Route, Routes } from 'react-router-dom';
+import Board from './pages/Board/Board';
+import Home from './pages/Home/Home';
 
 function App() {
   return (
-    <div>
-    <Link to="/board">Board</Link>
-    <Link to="/">Home</Link>
-    </div>
+    
+    <BrowserRouter>
+    <Routes>
+      <Route path="board" element={<Board />}>
+      <Route path=":boardID" element={<Board />} />
+      </Route>
+      <Route path="/" element={<Home boards={[]} />}>
+        
+      </Route>
+    </Routes>
+  </BrowserRouter>
+    
   //   <BrowserRouter>
   //   <Routes>
   //     <Route path="board" element={<Board />}></Route>

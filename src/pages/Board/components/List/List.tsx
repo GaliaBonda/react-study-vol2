@@ -3,11 +3,11 @@ import ICard from "../../../../common/interfaces/ICard";
 import Card from "../Card/Card";
 import './list.scss'
 
-type PropsType = {
+type propsType = {
     title: string;
     cards: ICard[];
 };
-export default function List(props: PropsType) {
+export default function List(props: propsType) {
     let cards = props.cards.map((item, index) => {
         return <Card title={item.title} key={index}/>
     });

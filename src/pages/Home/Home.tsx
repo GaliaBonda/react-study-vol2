@@ -1,29 +1,34 @@
 import React from "react";
+import { connect } from "react-redux";
 import { Link } from 'react-router-dom';
 import IBoard from "../../common/interfaces/IBoard";
+import { getBoards } from "../../store/modules/boards/actions";
 import Board from "./components/Board/Board";
 import './home.scss';
 
-type StateType = {
-    boards: IBoard[];
+type propsType = {
+  boards: IBoard[];
+  getBoards: () => Promise<void>;
+}
+
+// type stateType = {
+//     boards: IBoard[];
+// };
+type stateType = {
+  boards: IBoard[]
 };
 
-let state = {
-    boards: [
-      {id: 1, title: "покупки"},
-      {id: 2, title: "подготовка к свадьбе"},
-      {id: 3, title: "разработка интернет-магазина"},
-      {id: 4, title: "курс по продвижению в соцсетях"}
-    ]
-  };
-
-export default class Home extends React.Component<any, StateType> {
-    constructor(props: any) {
+class Home extends React.Component<propsType, stateType> {
+    constructor(props: propsType) {
         super(props);
-        this.state = state;
+        // this.state = state;
+    }
+
+    async componentDidMount() {
+      await this.props.getBoards();
     }
   render() {
-    let boards = this.state.boards.map((item, index) => {
+    let boards = this.props.boards.map((item, index) => {
         return (
             <Link className="home__board-link"
             to={`/board/${index}`}
@@ -53,3 +58,8 @@ export default class Home extends React.Component<any, StateType> {
     );
   }
 }
+
+const mapStateToProps = (state: stateType) => ({
+  ...state.boards,
+});
+export default connect(mapStateToProps, { getBoards })(Home);
