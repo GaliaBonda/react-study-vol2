@@ -1,13 +1,14 @@
 import React from "react";
 import List from "./components/List/List";
 import './board.scss'
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { withRouter } from "../../common/utils/withRouter";
 
 
 type StateType = {
     title: string;
     lists: Array<any>;
+    boardId: number | null;
 };
 let state = {
     title: "Моя тестовая доска",
@@ -36,9 +37,10 @@ let state = {
                 { id: 6, title: "погулять с собакой" }
             ]
         }
-    ]
+    ],
+    boardId: null,
 };
-let boardId:string;
+// let boardId:string;
 
 class Board extends React.Component<any, StateType> {
     constructor(props: any) {
@@ -48,7 +50,8 @@ class Board extends React.Component<any, StateType> {
 
     componentDidMount() {
         // let { board_id } = this.props.params;
-        boardId = this.props.params.boardID;
+        this.setState({boardId: this.props.params.boardID});
+        // boardId = this.props.params.boardID;
         console.log(this.props.params);
         
         
@@ -69,7 +72,7 @@ class Board extends React.Component<any, StateType> {
         return (<div className="board">
             <Link className="board__link" to="/">Home</Link>
             <div className="board-container">
-                <h1 className="board__title">{this.state.title} {boardId}!</h1>
+                <h1 className="board__title">{this.state.title} {this.state.boardId}!</h1>
                 <ul className="board__list">{lists}</ul>
                 <button className="board__btn btn">Add list</button>
             </div>
