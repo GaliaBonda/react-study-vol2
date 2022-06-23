@@ -25,7 +25,7 @@ export default class Home extends React.Component<any, StateType> {
   render() {
     let boards = this.state.boards.map((item, index) => {
         return (
-            <Link
+            <Link className="home__board-link"
             to={`/board/${index}`}
             key={index}
           >

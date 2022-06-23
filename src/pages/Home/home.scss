@@ -26,8 +26,8 @@ ul {
     padding: 4em 2em;
     position: relative;
     &__list {
-        
         display: flex;
+        flex-wrap: wrap;
         gap: 2em;
 
     }
@@ -40,5 +40,11 @@ ul {
     &__btn {
         display: block;
         margin-top: 3em;
+    }
+    &__board-link {
+        color: rgb(107, 102, 102);
+    }
+    &__board-link:hover {
+        color: rgb(46, 45, 45);
     }
 }
