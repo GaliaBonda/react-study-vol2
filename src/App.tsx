@@ -10,7 +10,8 @@ function App() {
     
     <BrowserRouter>
     <Routes>
-      <Route path="board" element={<Board />}>
+      {/* <Route path="board" element={<Board />}> */}
+      <Route path="board" element={<Home boards={[]}/>}>
       <Route path=":boardID" element={<Board />} />
       </Route>
       <Route path="/" element={<Home boards={[]} />}>
