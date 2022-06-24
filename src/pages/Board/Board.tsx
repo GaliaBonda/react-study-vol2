@@ -1,58 +1,38 @@
 import React from "react";
 import List from "./components/List/List";
 import './board.scss'
-import { Link } from "react-router-dom";
+import { Link, Params } from "react-router-dom";
 import { withRouter } from "../../common/utils/withRouter";
+import { connect } from "react-redux";
+import { getBoard } from "../../store/modules/board/actions";
+import IBoard from "../../common/interfaces/IBoard";
 
 
-type stateType = {
+type propsType = {
     title: string;
     lists: Array<any>;
     boardId: number | null;
+    params: Readonly<Params<string>>;
+    getBoard: (id: string | undefined) => Promise<void>;
 };
-let state = {
-    title: "Моя тестовая доска",
-    lists: [
-        {
-            id: 1,
-            title: "Планы",
-            cards: [
-                { id: 1, title: "помыть кота" },
-                { id: 2, title: "приготовить суп" },
-                { id: 3, title: "сходить в магазин" }
-            ]
-        },
-        {
-            id: 2,
-            title: "В процессе",
-            cards: [
-                { id: 4, title: "посмотреть сериал" }
-            ]
-        },
-        {
-            id: 3,
-            title: "Сделано",
-            cards: [
-                { id: 5, title: "сделать домашку" },
-                { id: 6, title: "погулять с собакой" }
-            ]
-        }
-    ],
-    boardId: null,
-};
+
+type stateType = {board: IBoard};
+
 // let boardId:string;
 
-class Board extends React.Component<any, stateType> {
-    constructor(props: any) {
+class Board extends React.Component<propsType, stateType> {
+    constructor(props: propsType) {
         super(props);
-        this.state = state;
+        // this.state = state;
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         // let { board_id } = this.props.params;
-        this.setState({boardId: this.props.params.boardID});
+        // this.setState({boardId: this.props.params.boardID});
         // boardId = this.props.params.boardID;
-        console.log(this.props.params);
+        // console.log(this.props.params);
+        let boardId = this.props.params.boardID;
+        await this.props.getBoard(boardId);
         
         
         // if (board_id) {
@@ -62,7 +42,7 @@ class Board extends React.Component<any, stateType> {
     }
 
     render() {
-        let lists = this.state.lists.map((item, index) => {
+        let lists = this.props.lists.map((item, index) => {
             return <List title={item.title} cards={item.cards} key={index}></List>
         });
         
@@ -72,7 +52,7 @@ class Board extends React.Component<any, stateType> {
         return (<div className="board">
             <Link className="board__link" to="/">Home</Link>
             <div className="board-container">
-                <h1 className="board__title">{this.state.title} {this.state.boardId}!</h1>
+                <h1 className="board__title">{this.props.title} {this.props.boardId}!</h1>
                 <ul className="board__list">{lists}</ul>
                 <button className="board__btn btn">Add list</button>
             </div>
@@ -82,4 +62,8 @@ class Board extends React.Component<any, stateType> {
     }
 }
 
-export default withRouter(Board);
+// export default withRouter(Board);
+const mapStateToProps = (state: stateType) => ({
+    ...state.board,
+  });
+  export default connect(mapStateToProps, { getBoard })(withRouter(Board));

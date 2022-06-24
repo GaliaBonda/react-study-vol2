@@ -18,6 +18,13 @@ type stateType = {
   boards: IBoard[]
 };
 
+let testboards = [
+  { id: 1, title: "покупки" },
+  { id: 2, title: "подготовка к свадьбе" },
+  { id: 3, title: "разработка интернет-магазина" },
+  { id: 4, title: "курс по продвижению в соцсетях" }
+];
+
 class Home extends React.Component<propsType, stateType> {
     constructor(props: propsType) {
         super(props);
@@ -39,6 +46,17 @@ class Home extends React.Component<propsType, stateType> {
         
         );
     });
+    if (!boards.length) boards = testboards.map((item, index) => {
+      return (
+          <Link className="home__board-link"
+          to={`/board/${index}`}
+          key={index}
+        >
+          <Board title={item.title} />
+        </Link>
+      
+      );
+  });
     return (
         <div className="home">
             <nav className="home__nav nav">
