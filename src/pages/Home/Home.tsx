@@ -28,7 +28,7 @@ class Home extends React.Component<propsType, stateType> {
       await this.props.getBoards();
     }
   render() {
-    let boards = this.props.boards.map((item, index) => {
+    let boards =  this.props.boards.map((item, index) => {
         return (
             <Link className="home__board-link"
             to={`/board/${index}`}

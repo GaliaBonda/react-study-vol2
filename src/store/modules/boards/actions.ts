@@ -3,6 +3,7 @@ import config from '../../../common/constants/api';
 import {Dispatch} from "redux";
 import api from "../../../api";
 import { AxiosResponse } from 'axios';
+import IBoard from '../../../common/interfaces/IBoard';
 
 export const getBoards = () => async (dispatch: Dispatch) => {
     try {
@@ -11,13 +12,13 @@ export const getBoards = () => async (dispatch: Dispatch) => {
         });
         api.interceptors.request.use(function (config) {
             const token = res.accessToken;
-            if (config.headers) config.headers.Authorization =  token;
+            if (config.headers) config.headers.Authorization =  'Bearer ' + token;
         
             return config;
         });
-        console.log(res.accessToken);
-        const data = await api.get("/board");
-        dispatch({type: 'UPDATE_BOARDS', payload: data});
+        // console.log(res.accessToken);
+        const data: {boards: IBoard[]} = await api.get("/board");
+        dispatch({type: 'UPDATE_BOARDS', payload: data.boards});
     } catch (e) {
         console.log(e)
         dispatch({type: 'ERROR_ACTION_TYPE'});
