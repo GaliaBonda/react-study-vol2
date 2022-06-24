@@ -2,13 +2,15 @@ import React from "react";
 import { connect } from "react-redux";
 import { Link } from 'react-router-dom';
 import IBoard from "../../common/interfaces/IBoard";
-import { getBoards } from "../../store/modules/boards/actions";
+import { getBoards, postBoard } from "../../store/modules/boards/actions";
 import Board from "./components/Board/Board";
 import './home.scss';
 
 type propsType = {
   boards: IBoard[];
   getBoards: () => Promise<void>;
+  postBoard: () => Promise<void>;
+
 }
 
 // type stateType = {
@@ -33,12 +35,13 @@ class Home extends React.Component<propsType, stateType> {
 
     async componentDidMount() {
       await this.props.getBoards();
+      // await this.props.postBoard();
     }
   render() {
     let boards =  this.props.boards.map((item, index) => {
         return (
             <Link className="home__board-link"
-            to={`/board/${index}`}
+            to={`/board/${item.id}`}
             key={index}
           >
             <Board title={item.title} />
@@ -46,17 +49,17 @@ class Home extends React.Component<propsType, stateType> {
         
         );
     });
-    if (!boards.length) boards = testboards.map((item, index) => {
-      return (
-          <Link className="home__board-link"
-          to={`/board/${index}`}
-          key={index}
-        >
-          <Board title={item.title} />
-        </Link>
+  //   if (!boards.length) boards = testboards.map((item, index) => {
+  //     return (
+  //         <Link className="home__board-link"
+  //         to={`/board/${index}`}
+  //         key={index}
+  //       >
+  //         <Board title={item.title} />
+  //       </Link>
       
-      );
-  });
+  //     );
+  // });
     return (
         <div className="home">
             <nav className="home__nav nav">
@@ -80,4 +83,4 @@ class Home extends React.Component<propsType, stateType> {
 const mapStateToProps = (state: stateType) => ({
   ...state.boards,
 });
-export default connect(mapStateToProps, { getBoards })(Home);
+export default connect(mapStateToProps, { getBoards, postBoard })(Home);

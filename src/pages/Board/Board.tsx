@@ -27,18 +27,8 @@ class Board extends React.Component<propsType, stateType> {
     }
 
     async componentDidMount() {
-        // let { board_id } = this.props.params;
-        // this.setState({boardId: this.props.params.boardID});
-        // boardId = this.props.params.boardID;
-        // console.log(this.props.params);
         let boardId = this.props.params.boardID;
         await this.props.getBoard(boardId);
-        
-        
-        // if (board_id) {
-        //     console.log(board_id);
-        //     boardId = board_id;
-        // }
     }
 
     render() {
@@ -46,9 +36,6 @@ class Board extends React.Component<propsType, stateType> {
             return <List title={item.title} cards={item.cards} key={index}></List>
         });
         
-        
-        //  const { board_id } = useParams();
-
         return (<div className="board">
             <Link className="board__link" to="/">Home</Link>
             <div className="board-container">

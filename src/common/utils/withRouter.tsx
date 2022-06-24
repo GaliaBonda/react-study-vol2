@@ -5,6 +5,7 @@ export const withRouter = (Component: typeof React.Component) => {
   const Wrapper = (props: any) => {
     const params = useParams();
     
+    
     return (
       <Component
         params={params}

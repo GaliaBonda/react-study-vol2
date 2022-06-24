@@ -25,4 +25,28 @@ export const getBoards = () => async (dispatch: Dispatch) => {
     }
 }
 
+export const postBoard =
+  () =>
+  async (dispatch: Dispatch): Promise<void> => {
+      try {
+        let res: AxiosResponse & {accessToken: string} = await api.post('/login', {
+            email: "test@gmail.com", password: "testpass"
+        });
+        api.interceptors.request.use(function (config) {
+            const token = res.accessToken;
+            if (config.headers) config.headers.Authorization =  'Bearer ' + token;
+        
+            return config;
+        });
+      const board = {
+        title: 'notodos',
+      };
+
+      await api.post(`/board`, board);
+      await dispatch({ type: 'POST_BOARD', payload: { ...board } });
+    } catch (e) {
+      dispatch({ type: 'ERROR_ACTION_TYPE' });
+    }
+  };
+
 
