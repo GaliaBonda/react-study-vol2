@@ -22,7 +22,7 @@ export default function reducer(state = initialState, action: { type: string, pa
                 boards: action.payload
             };
         default: {
-            return { ...state, ...action.payload };
+            return { ...state };
         }
     }
 }

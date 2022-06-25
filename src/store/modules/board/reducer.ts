@@ -26,7 +26,6 @@ const initialState = {
             ]
         }
     ],
-    boardId: null,
 };
 
 export default function reducer(state = initialState, action: {type: string, payload?: any}) {
@@ -34,10 +33,10 @@ export default function reducer(state = initialState, action: {type: string, pay
         case 'GET_BOARD':
             return {
                 ...state,
-                board: action.payload
+                ...action.payload
             };
         default: {
-            return {...state, ...action.payload};
+            return {...state};
         }
     }
 }
