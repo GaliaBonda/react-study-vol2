@@ -6,20 +6,20 @@ import { withRouter } from "../../common/utils/withRouter";
 import { connect } from "react-redux";
 import { getBoard } from "../../store/modules/board/actions";
 import IBoard from "../../common/interfaces/IBoard";
+import IList from "../../common/interfaces/IList";
 
 
 type propsType = {
-    title: string;
-    lists: Array<any>;
-    id: number | null;
+    board: IBoard;
+    // title: string;
+    // lists: Array<any>;
+    // id: number | null;
     params: Readonly<Params<string>>;
     getBoard: (id: string | undefined) => Promise<void>;
 };
 
 type stateType = {
-     title: string;
-    lists: Array<any>;
-    id: number | null;
+    board: IBoard;
 };
 
 // let boardId:string;
@@ -36,9 +36,9 @@ class Board extends React.Component<propsType, stateType> {
     }
 
     render() {
-        let lists: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ReactFragment | JSX.Element[] | null | undefined;
-        if (this.props.lists) {
-            lists = this.props.lists.map((item, index) => {
+        let lists: JSX.Element[];
+        if (this.props.board.lists) {
+            lists = this.props.board.lists.map((item, index) => {
             return <List title={item.title} cards={item.cards} key={index}></List>
         });
         } else {
@@ -48,7 +48,7 @@ class Board extends React.Component<propsType, stateType> {
         return (<div className="board">
             <Link className="board__link" to="/">Home</Link>
             <div className="board-container">
-                <h1 className="board__title">{this.props.title} {this.props.id}</h1>
+                <h1 className="board__title">{this.props.board.title} {this.props.board.id}</h1>
                 <ul className="board__list">{lists}</ul>
                 <button className="board__btn btn">Add list</button>
             </div>

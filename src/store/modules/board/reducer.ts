@@ -33,7 +33,7 @@ export default function reducer(state = initialState, action: {type: string, pay
         case 'GET_BOARD':
             return {
                 // ...state,
-                ...action.payload
+                board: {...action.payload}
             };
         default: {
             return {...state};
