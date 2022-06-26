@@ -6,7 +6,6 @@ import { withRouter } from "../../common/utils/withRouter";
 import { connect } from "react-redux";
 import { getBoard } from "../../store/modules/board/actions";
 import IBoard from "../../common/interfaces/IBoard";
-import IList from "../../common/interfaces/IList";
 
 
 type propsType = {
@@ -15,7 +14,7 @@ type propsType = {
     // lists: Array<any>;
     // id: number | null;
     params: Readonly<Params<string>>;
-    getBoard: (id: string | undefined) => Promise<void>;
+    getBoard: (id: string) => Promise<void>;
 };
 
 type stateType = {
@@ -30,25 +29,28 @@ class Board extends React.Component<propsType, stateType> {
         // this.state = state;
     }
 
-    async componentDidMount() {
-        let boardId = this.props.params.boardID;
-        await this.props.getBoard(boardId);
+     componentDidMount() {
+        let boardId = this.props.params.boardID || "";
+         this.props.getBoard(boardId);
     }
 
     render() {
+        
         let lists: JSX.Element[];
-        if (this.props.board.lists) {
+        if (this.props.board.lists && JSON.stringify(this.props.board.lists) !== '{}') {
             lists = this.props.board.lists.map((item, index) => {
             return <List title={item.title} cards={item.cards} key={index}></List>
         });
         } else {
             lists = [];
         }
+        let { board } = this.props;
+        console.log(board);
         
         return (<div className="board">
             <Link className="board__link" to="/">Home</Link>
             <div className="board-container">
-                <h1 className="board__title">{this.props.board.title} {this.props.board.id}</h1>
+                <h1 className="board__title">{board.title} {board.id}</h1>
                 <ul className="board__list">{lists}</ul>
                 <button className="board__btn btn">Add list</button>
             </div>
@@ -60,6 +62,8 @@ class Board extends React.Component<propsType, stateType> {
 
 // export default withRouter(Board);
 const mapStateToProps = (state: stateType) => ({
-    ...state,
-  });
-  export default connect(mapStateToProps, { getBoard })(withRouter(Board));
+    ...state.board,
+});
+  
+export default withRouter(connect(mapStateToProps, { getBoard })(Board));
+// export default connect(mapStateToProps, { getBoard })(Board);

@@ -1,5 +1,6 @@
 const initialState = {
-    title: "Моя тестовая доска",
+    board: {
+        title: "Моя тестовая доска",
     lists: [
         {
             id: 1,
@@ -26,14 +27,14 @@ const initialState = {
             ]
         }
     ],
+    }
 };
 
 export default function reducer(state = initialState, action: {type: string, payload?: any}) {
     switch (action.type) {
         case 'GET_BOARD':
             return {
-                // ...state,
-                board: {...action.payload}
+               board: action.payload,
             };
         default: {
             return {...state};

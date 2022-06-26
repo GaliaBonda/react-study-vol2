@@ -49,6 +49,8 @@ class Home extends React.Component<propsType, stateType> {
         
         );
     });
+    console.log(this.props.boards);
+    
   //   if (!boards.length) boards = testboards.map((item, index) => {
   //     return (
   //         <Link className="home__board-link"

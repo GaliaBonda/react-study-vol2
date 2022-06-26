@@ -19,7 +19,7 @@ export const getBoard = (id: string) => async (dispatch: Dispatch) => {
             return config;
         });
         const data: { board: IBoard } = await api.get(`/board/${id}`);
-        console.log(data);
+        // console.log(data);
         
         dispatch({type: 'GET_BOARD', payload: {...data, id: id}});
     } catch (e) {
