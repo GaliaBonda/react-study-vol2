@@ -26,7 +26,7 @@ export const getBoards = () => async (dispatch: Dispatch) => {
 }
 
 export const postBoard =
-  () =>
+  (title: string) =>
   async (dispatch: Dispatch): Promise<void> => {
       try {
         let res: AxiosResponse & {accessToken: string} = await api.post('/login', {
@@ -39,7 +39,7 @@ export const postBoard =
             return config;
         });
       const board = {
-        title: 'notodos',
+        title: title,
       };
 
       await api.post(`/board`, board);

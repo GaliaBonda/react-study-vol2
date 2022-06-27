@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ChangeEvent } from "react";
 import { connect } from "react-redux";
 import { Link } from 'react-router-dom';
 import IBoard from "../../common/interfaces/IBoard";
@@ -10,7 +10,7 @@ import './home.scss';
 type propsType = {
   boards: IBoard[];
   getBoards: () => Promise<void>;
-  postBoard: () => Promise<void>;
+  postBoard: (title: string) => Promise<void>;
 
 }
 
@@ -20,6 +20,7 @@ type propsType = {
 type stateType = {
   boards: IBoard[];
   addModalShown: boolean;
+  newBoardTitle: string;
 };
 
 // let testboards = [
@@ -35,17 +36,27 @@ class Home extends React.Component<propsType, stateType> {
       this.state = {
         boards: this.props.boards,
         addModalShown: false,
+        newBoardTitle: '',
       };
       this.addBoard = this.addBoard.bind(this);
       this.closeAddModal = this.closeAddModal.bind(this);
+      this.addNewBoard = this.addNewBoard.bind(this);
+      this.updateNewBoardName = this.updateNewBoardName.bind(this);
   }
   
   addBoard() {
       this.setState({addModalShown: true});
     
   }
+  updateNewBoardName(name: string) {
+    this.setState({newBoardTitle: name});
+
+  }
+  addNewBoard() {
+    this.props.postBoard(this.state.newBoardTitle);
+    this.props.getBoards();
+  }
   closeAddModal() {
-    console.log('blaaa');
     this.setState({addModalShown: false});
     
   }
@@ -81,7 +92,10 @@ class Home extends React.Component<propsType, stateType> {
                 {boards}
             </ul>
         <button className="btn home__btn" onClick={this.addBoard}>Add board</button>
-        <AddModal title="Add new board" shown={this.state.addModalShown} handleClose={this.closeAddModal} />
+        <AddModal title="Add new board" shown={this.state.addModalShown} 
+        handleClose={this.closeAddModal}
+        handleChange={this.updateNewBoardName} 
+        handleOk={this.addNewBoard} />
             
         </div>
     );
