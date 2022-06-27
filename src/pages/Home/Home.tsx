@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { Link } from 'react-router-dom';
 import IBoard from "../../common/interfaces/IBoard";
 import { getBoards, postBoard } from "../../store/modules/boards/actions";
+import AddModal from "./components/AddModal/AddModal";
 import Board from "./components/Board/Board";
 import './home.scss';
 
@@ -17,26 +18,36 @@ type propsType = {
 //     boards: IBoard[];
 // };
 type stateType = {
-  boards: IBoard[]
+  boards: IBoard[];
+  addModalShown: boolean;
 };
 
-let testboards = [
-  { id: 1, title: "покупки" },
-  { id: 2, title: "подготовка к свадьбе" },
-  { id: 3, title: "разработка интернет-магазина" },
-  { id: 4, title: "курс по продвижению в соцсетях" }
-];
+// let testboards = [
+//   { id: 1, title: "покупки" },
+//   { id: 2, title: "подготовка к свадьбе" },
+//   { id: 3, title: "разработка интернет-магазина" },
+//   { id: 4, title: "курс по продвижению в соцсетях" }
+// ];
 
 class Home extends React.Component<propsType, stateType> {
     constructor(props: propsType) {
         super(props);
-        // this.state = state;
-    }
+      this.state = {
+        boards: this.props.boards,
+        addModalShown: false,
+      };
+      this.addBoard = this.addBoard.bind(this);
+  }
+  
+  addBoard() {
+      this.setState({addModalShown: true});
+    
+  }
 
-    async componentDidMount() {
-      await this.props.getBoards();
-      // await this.props.postBoard();
-    }
+  async componentDidMount() {
+    await this.props.getBoards();
+    // await this.props.postBoard();
+  }
   render() {
     let boards =  this.props.boards.map((item, index) => {
         return (
@@ -49,19 +60,8 @@ class Home extends React.Component<propsType, stateType> {
         
         );
     });
-    console.log(this.props.boards);
+    // console.log(this.props.boards);
     
-  //   if (!boards.length) boards = testboards.map((item, index) => {
-  //     return (
-  //         <Link className="home__board-link"
-  //         to={`/board/${index}`}
-  //         key={index}
-  //       >
-  //         <Board title={item.title} />
-  //       </Link>
-      
-  //     );
-  // });
     return (
         <div className="home">
             <nav className="home__nav nav">
@@ -74,8 +74,8 @@ class Home extends React.Component<propsType, stateType> {
             <ul className="home__list boards">
                 {boards}
             </ul>
-            <button className="btn home__btn">Add board</button>
-            
+        <button className="btn home__btn" onClick={this.addBoard}>Add board</button>
+        <AddModal title="Add new board" shown={this.state.addModalShown}/>
             
         </div>
     );
