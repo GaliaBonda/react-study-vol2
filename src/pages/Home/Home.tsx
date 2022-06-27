@@ -37,10 +37,16 @@ class Home extends React.Component<propsType, stateType> {
         addModalShown: false,
       };
       this.addBoard = this.addBoard.bind(this);
+      this.closeAddModal = this.closeAddModal.bind(this);
   }
   
   addBoard() {
       this.setState({addModalShown: true});
+    
+  }
+  closeAddModal() {
+    console.log('blaaa');
+    this.setState({addModalShown: false});
     
   }
 
@@ -75,7 +81,7 @@ class Home extends React.Component<propsType, stateType> {
                 {boards}
             </ul>
         <button className="btn home__btn" onClick={this.addBoard}>Add board</button>
-        <AddModal title="Add new board" shown={this.state.addModalShown}/>
+        <AddModal title="Add new board" shown={this.state.addModalShown} handleClose={this.closeAddModal} />
             
         </div>
     );

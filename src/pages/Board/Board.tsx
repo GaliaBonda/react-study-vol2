@@ -45,7 +45,7 @@ class Board extends React.Component<propsType, stateType> {
             lists = [];
         }
         let { board } = this.props;
-        console.log(board);
+        // console.log(board);
         
         return (<div className="board">
             <Link className="board__link" to="/">Home</Link>

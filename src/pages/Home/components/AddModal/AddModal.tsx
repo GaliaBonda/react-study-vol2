@@ -1,21 +1,24 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 type propsType = {
     title: string;
     shown: boolean;
+    handleClose: () => void;
 };
 
-type stateType = {
-    shown: boolean;
-}
+// type stateType = {
+//     shown: boolean;
+// }
 
 export default function AddModal(props: propsType) {
-    const [shown, setShown] = useState(props.shown);
+    // const [shown, setShown] = useState(true);
     function handleClick() {
-        if (shown) setShown(false);
+        props.handleClose();
     }
-    
-    if (!shown) return null;
+    if (!props.shown) {
+        return null;
+    }
+    // if (!shown) return null;
     return (<div className="add-modal">
         <div className="modal-overlay">
             <h2 className="add-modal__title">{props.title}</h2>
