@@ -52,9 +52,9 @@ class Home extends React.Component<propsType, stateType> {
     this.setState({newBoardTitle: name});
 
   }
-  addNewBoard() {
-    this.props.postBoard(this.state.newBoardTitle);
-    this.props.getBoards();
+  async addNewBoard() {
+    await this.props.postBoard(this.state.newBoardTitle);
+    await this.props.getBoards();
   }
   closeAddModal() {
     this.setState({addModalShown: false});
