@@ -61,9 +61,9 @@ class Home extends React.Component<propsType, stateType> {
 
   validateBoard(title: string): void {
   
-  // const validationRegex = /^[a-z0-9а-я\s.-]+$/i;
+  const validationRegex = /^[a-z0-9а-я\s._-]+$/i;
   // if (title && title.length > 0 && validationRegex.test(title)) {
-  if (title && title.length > 0) {
+  if (title && title.length > 0 && validationRegex.test(title)) {
     this.setState({newBoardIsValide: true});
   } else {
     this.setState({newBoardIsValide: false});
