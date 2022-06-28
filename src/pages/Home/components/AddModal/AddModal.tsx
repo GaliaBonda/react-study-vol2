@@ -4,6 +4,7 @@ import './addmodal.scss';
 type propsType = {
     title: string;
     shown: boolean;
+    isValide: boolean;
     handleClose: () => void;
     handleOk: () => void;
     handleChange: (value: string) => void;
@@ -37,7 +38,13 @@ export default function AddModal(props: propsType) {
                 </label>
                 <div className="add-modal__btns">
                     <button className="add-modal__btn btn" onClick={handleClick}>Cancel</button>
+                    { props.isValide &&
                     <button className="add-modal__btn btn" onClick={handleOkClick}>Ok</button>
+                    }
+                    { !props.isValide &&
+                    <button className="add-modal__btn btn nonactive">Ok</button>
+                    }
+                    
                 </div>
 
             </div>

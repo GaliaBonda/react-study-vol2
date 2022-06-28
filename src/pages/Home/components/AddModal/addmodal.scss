@@ -44,3 +44,10 @@
     }
     
 }
+
+.btn.nonactive {
+    color: grey;
+    &:focus, &:hover {
+            box-shadow: none;
+        }
+}

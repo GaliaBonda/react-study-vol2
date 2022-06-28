@@ -1,6 +1,7 @@
 import React, { ChangeEvent } from "react";
 import { connect } from "react-redux";
 import { Link } from 'react-router-dom';
+import { validateLocaleAndSetLanguage } from "typescript";
 import IBoard from "../../common/interfaces/IBoard";
 import { getBoards, postBoard } from "../../store/modules/boards/actions";
 import AddModal from "./components/AddModal/AddModal";
@@ -21,6 +22,7 @@ type stateType = {
   boards: IBoard[];
   addModalShown: boolean;
   newBoardTitle: string;
+  newBoardIsValide: boolean;
 };
 
 // let testboards = [
@@ -30,6 +32,7 @@ type stateType = {
 //   { id: 4, title: "курс по продвижению в соцсетях" }
 // ];
 
+
 class Home extends React.Component<propsType, stateType> {
     constructor(props: propsType) {
         super(props);
@@ -37,11 +40,13 @@ class Home extends React.Component<propsType, stateType> {
         boards: this.props.boards,
         addModalShown: false,
         newBoardTitle: '',
+        newBoardIsValide: false,
       };
       this.addBoard = this.addBoard.bind(this);
       this.closeAddModal = this.closeAddModal.bind(this);
       this.addNewBoard = this.addNewBoard.bind(this);
       this.updateNewBoardName = this.updateNewBoardName.bind(this);
+      this.validateBoard = this.validateBoard.bind(this);
   }
   
   addBoard() {
@@ -49,12 +54,29 @@ class Home extends React.Component<propsType, stateType> {
     
   }
   updateNewBoardName(name: string) {
-    this.setState({newBoardTitle: name});
+    this.setState({ newBoardTitle: name });
+    this.validateBoard(name);
 
   }
+
+  validateBoard(title: string): void {
+  
+  // const validationRegex = /^[a-z0-9а-я\s.-]+$/i;
+  // if (title && title.length > 0 && validationRegex.test(title)) {
+  if (title && title.length > 0) {
+    this.setState({newBoardIsValide: true});
+  } else {
+    this.setState({newBoardIsValide: false});
+  }
+  }
+
+  
   async addNewBoard() {
-    await this.props.postBoard(this.state.newBoardTitle);
+    this.setState({addModalShown: false});
+      await this.props.postBoard(this.state.newBoardTitle);
     await this.props.getBoards();
+    
+    
   }
   closeAddModal() {
     this.setState({addModalShown: false});
@@ -92,7 +114,7 @@ class Home extends React.Component<propsType, stateType> {
                 {boards}
             </ul>
         <button className="btn home__btn" onClick={this.addBoard}>Add board</button>
-        <AddModal title="Add new board" shown={this.state.addModalShown} 
+        <AddModal title="Add new board" isValide={this.state.newBoardIsValide} shown={this.state.addModalShown} 
         handleClose={this.closeAddModal}
         handleChange={this.updateNewBoardName} 
         handleOk={this.addNewBoard} />
