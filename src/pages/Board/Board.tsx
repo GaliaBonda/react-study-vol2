@@ -56,10 +56,16 @@ class Board extends React.Component<propsType, stateType> {
         if (this.textInput.current) {
             this.textInput.current.focus();
         }
+        this.editBoard(this.props.board.id, this.state.editedBoardTitle);
     }
 
     async editBoard(id: string, name: string) {
-        await this.props.editBoard(id, name);
+        if (this.state.editedBoardIsValide) {
+           await this.props.editBoard(id, name); 
+            
+        }
+        
+        
     }
 
     editOn() {
@@ -68,11 +74,11 @@ class Board extends React.Component<propsType, stateType> {
     }
 
     editOff() {
+        
         this.setState({editOn: false});
         this.setState({editedBoardIsValide: validateBoard(this.state.editedBoardTitle)});
-        if (this.state.editedBoardIsValide) {
-            this.editBoard(this.props.board.id, this.state.editedBoardTitle);
-        }
+       
+        
     }
     handleChange(e: ChangeEvent<HTMLInputElement>) {
         this.setState({editedBoardTitle: e.target.value});
