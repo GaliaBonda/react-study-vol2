@@ -2,6 +2,7 @@ import React, { ChangeEvent } from "react";
 import { connect } from "react-redux";
 import { Link } from 'react-router-dom';
 import IBoard from "../../common/interfaces/IBoard";
+import { validateBoard } from "../../common/utils/functions";
 import { getBoards, postBoard } from "../../store/modules/boards/actions";
 import AddModal from "./components/AddModal/AddModal";
 import Board from "./components/Board/Board";
@@ -45,7 +46,7 @@ class Home extends React.Component<propsType, stateType> {
       this.closeAddModal = this.closeAddModal.bind(this);
       this.addNewBoard = this.addNewBoard.bind(this);
       this.updateNewBoardName = this.updateNewBoardName.bind(this);
-      this.validateBoard = this.validateBoard.bind(this);
+      // this.validateBoard = this.validateBoard.bind(this);
   }
   async componentDidMount() {
     await this.props.getBoards();
@@ -57,25 +58,26 @@ class Home extends React.Component<propsType, stateType> {
   }
   updateNewBoardName(name: string) {
     this.setState({ newBoardTitle: name });
-    this.validateBoard(name);
+    this.setState({newBoardIsValide: validateBoard(name)});
+    // this.validateBoard(name);
 
   }
 
-  validateBoard(title: string): void {
+  // validateBoard(title: string): boolean {
   
-  const validationRegex = /^[a-z0-9а-я\s._-]+$/i;
+  // const validationRegex = /^[a-z0-9а-я\s._-]+$/i;
+  // // if (title && title.length > 0 && validationRegex.test(title)) {
   // if (title && title.length > 0 && validationRegex.test(title)) {
-  if (title && title.length > 0 && validationRegex.test(title)) {
-    this.setState({newBoardIsValide: true});
-  } else {
-    this.setState({newBoardIsValide: false});
-  }
-  }
+  //   return true;
+  // } else {
+  //   return false;
+  // }
+  // }
 
   
   async addNewBoard() {
     this.setState({addModalShown: false});
-      await this.props.postBoard(this.state.newBoardTitle);
+    await this.props.postBoard(this.state.newBoardTitle);
     await this.props.getBoards();
     
     

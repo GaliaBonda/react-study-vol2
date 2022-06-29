@@ -4,9 +4,10 @@ import './board.scss'
 import { Link, Params } from "react-router-dom";
 import { withRouter } from "../../common/utils/withRouter";
 import { connect } from "react-redux";
-import { getBoard } from "../../store/modules/board/actions";
+import { editBoard, getBoard } from "../../store/modules/board/actions";
 import IBoard from "../../common/interfaces/IBoard";
-import { ChangeEvent, KeyboardEvent } from 'react';
+import { ChangeEvent, KeyboardEvent, MouseEvent } from 'react';
+import { validateBoard } from "../../common/utils/functions";
 
 
 type propsType = {
@@ -16,11 +17,14 @@ type propsType = {
     // id: number | null;
     params: Readonly<Params<string>>;
     getBoard: (id: string) => Promise<void>;
+    editBoard: (id: string, name: string) => Promise<void>;
 };
 
 type stateType = {
     board?: IBoard;
     editOn: boolean;
+    editedBoardTitle: string,
+        editedBoardIsValide: boolean,
 };
 
 // let boardId:string;
@@ -31,10 +35,13 @@ class Board extends React.Component<propsType, stateType> {
         super(props);
         this.state = {
             editOn: false,
+            editedBoardTitle: "",
+        editedBoardIsValide: false,
         };
         this.textInput = React.createRef();
         this.editOn = this.editOn.bind(this);
         this.editOff = this.editOff.bind(this);
+        this.editBoard = this.editBoard.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleKeyUp = this.handleKeyUp.bind(this);
     }
@@ -42,21 +49,33 @@ class Board extends React.Component<propsType, stateType> {
      componentDidMount() {
         let boardId = this.props.params.boardID || "";
          this.props.getBoard(boardId);
+         
     }
 
     componentDidUpdate() {
-        if (this.textInput.current) this.textInput.current.focus();
+        if (this.textInput.current) {
+            this.textInput.current.focus();
+        }
+    }
+
+    async editBoard(id: string, name: string) {
+        await this.props.editBoard(id, name);
     }
 
     editOn() {
         this.setState({editOn: true});
+        this.setState({editedBoardTitle: this.props.board.title});
     }
 
     editOff() {
         this.setState({editOn: false});
+        this.setState({editedBoardIsValide: validateBoard(this.state.editedBoardTitle)});
+        if (this.state.editedBoardIsValide) {
+            this.editBoard(this.props.board.id, this.state.editedBoardTitle);
+        }
     }
-    handleChange(e: ChangeEvent) {
-        
+    handleChange(e: ChangeEvent<HTMLInputElement>) {
+        this.setState({editedBoardTitle: e.target.value});
     }
 
     handleKeyUp(e: KeyboardEvent) {
@@ -83,7 +102,7 @@ class Board extends React.Component<propsType, stateType> {
             <div className="board-container">
                 <h1 className="board__title" onClick={this.editOn} onBlur={this.editOff}>
                     {!this.state.editOn ? <span>{board.title}</span> : 
-                    <input value={board.title} onChange={this.handleChange} onKeyUp={this.handleKeyUp} ref={this.textInput}/>}
+                    <input value={this.state.editedBoardTitle} onChange={this.handleChange} onKeyUp={this.handleKeyUp} ref={this.textInput}/>}
                     <span> {board.id}</span>
                 </h1>
                 <ul className="board__list">{lists}</ul>
@@ -100,5 +119,5 @@ const mapStateToProps = (state: stateType) => ({
     ...state.board,
 });
   
-export default withRouter(connect(mapStateToProps, { getBoard })(Board));
+export default withRouter(connect(mapStateToProps, { getBoard, editBoard })(Board));
 // export default connect(mapStateToProps, { getBoard })(Board);

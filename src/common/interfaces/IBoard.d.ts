@@ -1,5 +1,5 @@
 export default interface IBoard {
-    id: number;
+    id: string;
     title: string;
     lists: Ilist[];
 };

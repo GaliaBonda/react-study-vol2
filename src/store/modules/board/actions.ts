@@ -28,6 +28,19 @@ export const getBoard = (id: string) => async (dispatch: Dispatch) => {
     }
 }
 
+export const editBoard = (id: string, name: string) => async (dispatch: Dispatch) => {
+    try {
+        const data = await api.put(`/board/${id}`, {title: name});
+        console.log(data);
+        
+await dispatch({type: 'EDIT_BOARD', payload: {id: id, title: name}});
+    } catch (e) {
+        console.log(e)
+dispatch({type: 'ERROR_ACTION_TYPE'});
+    }
+}
+
+
 // export const createBoard = () => async (dispatch: Dispatch) => {
 //     try {
 //         const data = await api.post("/board/board_id", {payload: ""});
