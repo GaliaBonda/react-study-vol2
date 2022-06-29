@@ -18,7 +18,8 @@ type propsType = {
 };
 
 type stateType = {
-    board: IBoard;
+    board?: IBoard;
+    editOn: boolean;
 };
 
 // let boardId:string;
@@ -26,12 +27,27 @@ type stateType = {
 class Board extends React.Component<propsType, stateType> {
     constructor(props: propsType) {
         super(props);
-        // this.state = state;
+        this.state = {
+            editOn: false,
+        };
+        this.editOn = this.editOn.bind(this);
+        this.editOff = this.editOff.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     }
 
      componentDidMount() {
         let boardId = this.props.params.boardID || "";
          this.props.getBoard(boardId);
+    }
+
+    editOn() {
+        this.setState({editOn: true});
+    }
+    editOff() {
+        this.setState({editOn: false});
+    }
+    handleChange() {
+        
     }
 
     render() {
@@ -50,7 +66,10 @@ class Board extends React.Component<propsType, stateType> {
         return (<div className="board">
             <Link className="board__link" to="/">Home</Link>
             <div className="board-container">
-                <h1 className="board__title">{board.title} {board.id}</h1>
+                <h1 className="board__title" onClick={this.editOn} onBlur={this.editOff}>
+                    {!this.state.editOn ? <span>{board.title}</span> : <input value={board.title} onChange={this.handleChange} />}
+                    <span> {board.id}</span>
+                </h1>
                 <ul className="board__list">{lists}</ul>
                 <button className="board__btn btn">Add list</button>
             </div>
