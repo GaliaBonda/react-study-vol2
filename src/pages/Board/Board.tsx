@@ -6,6 +6,7 @@ import { withRouter } from "../../common/utils/withRouter";
 import { connect } from "react-redux";
 import { getBoard } from "../../store/modules/board/actions";
 import IBoard from "../../common/interfaces/IBoard";
+import { ChangeEvent, KeyboardEvent } from 'react';
 
 
 type propsType = {
@@ -25,14 +26,17 @@ type stateType = {
 // let boardId:string;
 
 class Board extends React.Component<propsType, stateType> {
+    textInput: React.RefObject<HTMLInputElement>;
     constructor(props: propsType) {
         super(props);
         this.state = {
             editOn: false,
         };
+        this.textInput = React.createRef();
         this.editOn = this.editOn.bind(this);
         this.editOff = this.editOff.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.handleKeyUp = this.handleKeyUp.bind(this);
     }
 
      componentDidMount() {
@@ -40,14 +44,25 @@ class Board extends React.Component<propsType, stateType> {
          this.props.getBoard(boardId);
     }
 
+    componentDidUpdate() {
+        if (this.textInput.current) this.textInput.current.focus();
+    }
+
     editOn() {
         this.setState({editOn: true});
     }
+
     editOff() {
         this.setState({editOn: false});
     }
-    handleChange() {
+    handleChange(e: ChangeEvent) {
         
+    }
+
+    handleKeyUp(e: KeyboardEvent) {
+        if (e.key === 'Enter') {
+            this.editOff();
+        }
     }
 
     render() {
@@ -67,7 +82,8 @@ class Board extends React.Component<propsType, stateType> {
             <Link className="board__link" to="/">Home</Link>
             <div className="board-container">
                 <h1 className="board__title" onClick={this.editOn} onBlur={this.editOff}>
-                    {!this.state.editOn ? <span>{board.title}</span> : <input value={board.title} onChange={this.handleChange} />}
+                    {!this.state.editOn ? <span>{board.title}</span> : 
+                    <input value={board.title} onChange={this.handleChange} onKeyUp={this.handleKeyUp} ref={this.textInput}/>}
                     <span> {board.id}</span>
                 </h1>
                 <ul className="board__list">{lists}</ul>
