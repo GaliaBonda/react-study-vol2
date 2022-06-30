@@ -34,7 +34,7 @@ export default function AddModal(props: propsType) {
             <div className="add-modal__main">
                 <h2 className="add-modal__title">{props.title}</h2>
                 <label className="add-modal__label">
-                    <input type="text" className="add-modal__input" placeholder='New board name' onChange={handleChange}/>
+                    <input type="text" className="add-modal__input" placeholder='Type name' onChange={handleChange}/>
                 </label>
                 <div className="add-modal__btns">
                     <button className="add-modal__btn btn" onClick={handleClick}>Cancel</button>

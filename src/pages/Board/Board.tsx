@@ -8,6 +8,7 @@ import { editBoard, getBoard } from "../../store/modules/board/actions";
 import IBoard from "../../common/interfaces/IBoard";
 import { ChangeEvent, KeyboardEvent } from 'react';
 import { validateBoard } from "../../common/utils/functions";
+import AddModal from "../../components/AddModal/AddModal";
 
 
 type propsType = {
@@ -18,7 +19,7 @@ type propsType = {
     params: Readonly<Params<string>>;
     getBoard: (id: string) => Promise<void>;
     editBoard: (id: string, name: string) => Promise<void>;
-    postList: (id: string) => Promise<void>;
+    // postList: (id: string, name: string) => Promise<void>;
 };
 
 type stateType = {
@@ -27,6 +28,8 @@ type stateType = {
     editedBoardTitle: string,
     editedBoardIsValide: boolean,
     warningText: string,
+    addListModalShown: boolean,
+    newListIsValide: boolean,
 };
 
 // let boardId:string;
@@ -40,14 +43,20 @@ class Board extends React.Component<propsType, stateType> {
             editedBoardTitle: "",
             editedBoardIsValide: true,
             warningText: "",
+            addListModalShown: false,
+            newListIsValide: false,
         };
         this.textInput = React.createRef();
+
         this.editOn = this.editOn.bind(this);
         this.editOff = this.editOff.bind(this);
         this.editBoard = this.editBoard.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleKeyUp = this.handleKeyUp.bind(this);
-        this.addList = this.addList.bind(this);
+        this.showAddListModal = this.showAddListModal.bind(this);
+        this.closeAddModal = this.closeAddModal.bind(this);
+        this.updateNewListName = this.updateNewListName.bind(this);
+        this.addNewList = this.addNewList.bind(this);
     }
 
     componentDidMount() {
@@ -71,6 +80,7 @@ class Board extends React.Component<propsType, stateType> {
             await this.props.getBoard(id);
         } else {
             this.setState({ warningText: 'Invalid board title' });
+            this.setState({ editedBoardTitle: this.props.board.title });
         }
 
 
@@ -78,8 +88,10 @@ class Board extends React.Component<propsType, stateType> {
 
     editOn() {
         this.setState({ editOn: true });
-        this.setState({warningText: ""});
+        this.setState({ warningText: "" });
+
         this.setState({ editedBoardTitle: this.props.board.title });
+        this.setState({ editedBoardIsValide: validateBoard(this.props.board.title) });
     }
 
     editOff() {
@@ -99,8 +111,21 @@ class Board extends React.Component<propsType, stateType> {
         }
     }
 
-    addList() {
+    showAddListModal() {
+        this.setState({ addListModalShown: true });
+        // this.props.postList(this.props.board.id, this.state.listTitle);
 
+    }
+
+    closeAddModal() {
+        this.setState({ addListModalShown: false });
+    }
+
+    updateNewListName() {
+
+    }
+
+    addNewList() {
 
     }
 
@@ -127,7 +152,11 @@ class Board extends React.Component<propsType, stateType> {
                 </h1>
                 {(this.state.warningText.length > 0) && <p className="warning board__warning">{this.state.warningText}</p>}
                 <ul className="board__list">{lists}</ul>
-                <button className="board__btn btn" onClick={this.addList}>Add list</button>
+                <button className="board__btn btn" onClick={this.showAddListModal}>Add list</button>
+                <AddModal title="Add new list" shown={this.state.addListModalShown} isValide={this.state.newListIsValide}
+                    handleClose={this.closeAddModal}
+                    handleChange={this.updateNewListName}
+                    handleOk={this.addNewList} />
             </div>
 
 

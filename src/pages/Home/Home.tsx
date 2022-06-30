@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import IBoard from "../../common/interfaces/IBoard";
 import { validateBoard } from "../../common/utils/functions";
 import { getBoards, postBoard } from "../../store/modules/boards/actions";
-import AddModal from "./components/AddModal/AddModal";
+import AddModal from "../../components/AddModal/AddModal";
 import Board from "./components/Board/Board";
 import './home.scss';
 
