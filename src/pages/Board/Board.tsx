@@ -107,9 +107,9 @@ class Board extends React.Component<propsType, stateType> {
             <Link className="board__link" to="/">Home</Link>
             <div className="board-container">
                 <h1 className="board__title" onClick={this.editOn} onBlur={this.editOff}>
-                    {!this.state.editOn ? <span>{board.title}</span> : 
-                    <input value={this.state.editedBoardTitle} onChange={this.handleChange} onKeyUp={this.handleKeyUp} ref={this.textInput}/>}
-                    <span> {board.id}</span>
+                    {!this.state.editOn ? <span className="board__title-span">{board.title}</span> : 
+                    <input className="board__input board__title-span" value={this.state.editedBoardTitle} onChange={this.handleChange} onKeyUp={this.handleKeyUp} ref={this.textInput}/>}
+                    <span className="board__title-id"> {board.id}</span>
                 </h1>
                 <ul className="board__list">{lists}</ul>
                 <button className="board__btn btn">Add list</button>
