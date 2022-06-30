@@ -15,6 +15,9 @@
         text-transform: uppercase;
         text-align: center;
         font-size: 1.5rem;
+        display: flex;
+        justify-content: space-between;
+         font-family: Arial, Helvetica, sans-serif
     }
 
     &__list {
@@ -37,5 +40,16 @@
         top: 1em;
         left: 1em;
         color: black;
+    }
+
+    &__input {
+        font-weight: inherit;
+    text-transform: inherit;
+    font-family: inherit;
+    padding: 0;
+    // display: inline;
+    border: none;
+    // text-align: inherit;
+    // font-size: inherit;
     }
 }
