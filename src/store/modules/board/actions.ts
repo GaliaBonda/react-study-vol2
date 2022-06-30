@@ -31,7 +31,7 @@ export const getBoard = (id: string) => async (dispatch: Dispatch) => {
 export const editBoard = (id: string, name: string) => async (dispatch: Dispatch) => {
     try {
         const data = await api.put(`/board/${id}`, {title: name});
-        console.log(data);
+        // console.log(data);
         
 await dispatch({type: 'EDIT_BOARD', payload: {id: id, title: name}});
     } catch (e) {

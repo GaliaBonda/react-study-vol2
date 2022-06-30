@@ -36,6 +36,10 @@ export default function reducer(state = initialState, action: {type: string, pay
             return {
                board: action.payload,
             };
+        case 'EDIT_BOARD':
+            return {
+               board: action.payload,
+            };
         default: {
             return {...state};
         }
