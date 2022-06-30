@@ -140,8 +140,8 @@ class Board extends React.Component<propsType, stateType> {
 
         let lists: JSX.Element[];
         if (this.props.board.lists && JSON.stringify(this.props.board.lists) !== '{}') {
-            lists = Object.values(this.props.board.lists).map((item) => {
-                return <List title={item.title} cards={item.cards} key={item.id}></List>
+            lists = this.props.board.lists.map((item, index) => {
+                return <List title={item.title} cards={item.cards ? Object.values(item.cards) : []} key={item.id ? item.id : index}></List>
             });
         } else {
             lists = [];

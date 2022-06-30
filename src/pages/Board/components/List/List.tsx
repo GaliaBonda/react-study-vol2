@@ -8,7 +8,7 @@ type propsType = {
     cards: ICard[];
 };
 export default function List(props: propsType) {
-    let cards = Object.values(props.cards).map((item, index) => {
+    let cards = props.cards.map((item, index) => {
         return <Card title={item.title} key={index}/>
     });
     return (<li className="list">

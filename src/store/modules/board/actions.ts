@@ -59,8 +59,8 @@ export const postList =
       };
 
     await api.post(`/board/${id}/list`, list);
-    //  await api.delete(`/board/${id}/list/${1656582501305}`);
-      await dispatch({ type: 'POST_LIST', payload: { ...list} });
+    // await api.delete(`/board/${id}/list/${1656600851486}`);
+    await dispatch({ type: 'POST_LIST', payload: { ...list} });
     } catch (e) {
 console.error(e);
       dispatch({ type: 'ERROR_ACTION_TYPE'});

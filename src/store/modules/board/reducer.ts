@@ -1,8 +1,7 @@
 const initialState = {
     board: {
         title: "Моя тестовая доска",
-        lists: {
-            "1": {
+        lists: [ {
                 id: 1,
                 title: "Планы",
                 cards: [
@@ -11,14 +10,14 @@ const initialState = {
                     { id: 3, title: "сходить в магазин" }
                 ]
             },
-            "2": {
+            {
                 id: 2,
                 title: "В процессе",
                 cards: [
                     { id: 4, title: "посмотреть сериал" }
                 ]
             },
-            "3": {
+            {
                 id: 3,
                 title: "Сделано",
                 cards: [
@@ -26,7 +25,7 @@ const initialState = {
                     { id: 6, title: "погулять с собакой" }
                 ]
             }
-    },
+        ],
     }
 };
 
@@ -34,7 +33,7 @@ export default function reducer(state = initialState, action: { type: string, pa
     switch (action.type) {
         case 'GET_BOARD':
             return {
-                board: action.payload,
+                board: {...action.payload, lists: Object.values(action.payload.lists)},
             };
         case 'EDIT_BOARD':
             return {
@@ -44,7 +43,7 @@ export default function reducer(state = initialState, action: { type: string, pa
             return {
                 board: {
                     ...state.board,
-                    lists: {...state.board.lists}
+                    lists: [...state.board.lists, {...action.payload}]
                 },
     };
         default: {
