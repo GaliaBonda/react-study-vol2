@@ -6,7 +6,7 @@ import { withRouter } from "../../common/utils/withRouter";
 import { connect } from "react-redux";
 import { editBoard, getBoard } from "../../store/modules/board/actions";
 import IBoard from "../../common/interfaces/IBoard";
-import { ChangeEvent, KeyboardEvent, MouseEvent } from 'react';
+import { ChangeEvent, KeyboardEvent } from 'react';
 import { validateBoard } from "../../common/utils/functions";
 
 
@@ -18,13 +18,15 @@ type propsType = {
     params: Readonly<Params<string>>;
     getBoard: (id: string) => Promise<void>;
     editBoard: (id: string, name: string) => Promise<void>;
+    postList: (id: string) => Promise<void>;
 };
 
 type stateType = {
     board?: IBoard;
     editOn: boolean;
     editedBoardTitle: string,
-        editedBoardIsValide: boolean,
+    editedBoardIsValide: boolean,
+    warningText: string,
 };
 
 // let boardId:string;
@@ -36,7 +38,8 @@ class Board extends React.Component<propsType, stateType> {
         this.state = {
             editOn: false,
             editedBoardTitle: "",
-        editedBoardIsValide: false,
+            editedBoardIsValide: true,
+            warningText: "",
         };
         this.textInput = React.createRef();
         this.editOn = this.editOn.bind(this);
@@ -44,12 +47,13 @@ class Board extends React.Component<propsType, stateType> {
         this.editBoard = this.editBoard.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleKeyUp = this.handleKeyUp.bind(this);
+        this.addList = this.addList.bind(this);
     }
 
-     componentDidMount() {
+    componentDidMount() {
         let boardId = this.props.params.boardID || "";
-         this.props.getBoard(boardId);
-         
+        this.props.getBoard(boardId);
+
     }
 
     componentDidUpdate() {
@@ -63,27 +67,30 @@ class Board extends React.Component<propsType, stateType> {
 
     async editBoard(id: string, name: string) {
         if (this.state.editedBoardIsValide) {
-           await this.props.editBoard(id, name);
-           await this.props.getBoard(id); 
+            await this.props.editBoard(id, name);
+            await this.props.getBoard(id);
+        } else {
+            this.setState({ warningText: 'Invalid board title' });
         }
-        
-        
+
+
     }
 
     editOn() {
-        this.setState({editOn: true});
-        this.setState({editedBoardTitle: this.props.board.title});
+        this.setState({ editOn: true });
+        this.setState({warningText: ""});
+        this.setState({ editedBoardTitle: this.props.board.title });
     }
 
     editOff() {
-        
-        this.setState({editOn: false});
+
+        this.setState({ editOn: false });
         this.editBoard(this.props.board.id, this.state.editedBoardTitle);
-        
+
     }
     handleChange(e: ChangeEvent<HTMLInputElement>) {
-        this.setState({editedBoardTitle: e.target.value});
-        this.setState({editedBoardIsValide: validateBoard(this.state.editedBoardTitle)});
+        this.setState({ editedBoardTitle: e.target.value });
+        this.setState({ editedBoardIsValide: validateBoard(e.target.value) });
     }
 
     handleKeyUp(e: KeyboardEvent) {
@@ -92,29 +99,35 @@ class Board extends React.Component<propsType, stateType> {
         }
     }
 
+    addList() {
+
+
+    }
+
     render() {
-        
+
         let lists: JSX.Element[];
         if (this.props.board.lists && JSON.stringify(this.props.board.lists) !== '{}') {
             lists = this.props.board.lists.map((item, index) => {
-            return <List title={item.title} cards={item.cards} key={index}></List>
-        });
+                return <List title={item.title} cards={item.cards} key={index}></List>
+            });
         } else {
             lists = [];
         }
         let { board } = this.props;
         // console.log(board);
-        
+
         return (<div className="board">
             <Link className="board__link" to="/">Home</Link>
             <div className="board-container">
                 <h1 className="board__title" onClick={this.editOn} onBlur={this.editOff}>
-                    {!this.state.editOn ? <span className="board__title-span">{board.title}</span> : 
-                    <input className="board__input board__title-span" value={this.state.editedBoardTitle} onChange={this.handleChange} onKeyUp={this.handleKeyUp} ref={this.textInput}/>}
+                    {!this.state.editOn ? <span className="board__title-span">{board.title}</span> :
+                        <input className="board__input board__title-span" value={this.state.editedBoardTitle} onChange={this.handleChange} onKeyUp={this.handleKeyUp} ref={this.textInput} />}
                     <span className="board__title-id"> {board.id}</span>
                 </h1>
+                {(this.state.warningText.length > 0) && <p className="warning board__warning">{this.state.warningText}</p>}
                 <ul className="board__list">{lists}</ul>
-                <button className="board__btn btn">Add list</button>
+                <button className="board__btn btn" onClick={this.addList}>Add list</button>
             </div>
 
 
@@ -126,6 +139,6 @@ class Board extends React.Component<propsType, stateType> {
 const mapStateToProps = (state: stateType) => ({
     ...state.board,
 });
-  
+
 export default withRouter(connect(mapStateToProps, { getBoard, editBoard })(Board));
 // export default connect(mapStateToProps, { getBoard })(Board);
