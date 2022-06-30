@@ -4,10 +4,10 @@ import './board.scss'
 import { Link, Params } from "react-router-dom";
 import { withRouter } from "../../common/utils/withRouter";
 import { connect } from "react-redux";
-import { editBoard, getBoard } from "../../store/modules/board/actions";
+import { editBoard, getBoard, postList } from "../../store/modules/board/actions";
 import IBoard from "../../common/interfaces/IBoard";
 import { ChangeEvent, KeyboardEvent } from 'react';
-import { validateBoard } from "../../common/utils/functions";
+import { validateTitle } from "../../common/utils/functions";
 import AddModal from "../../components/AddModal/AddModal";
 
 
@@ -19,7 +19,7 @@ type propsType = {
     params: Readonly<Params<string>>;
     getBoard: (id: string) => Promise<void>;
     editBoard: (id: string, name: string) => Promise<void>;
-    // postList: (id: string, name: string) => Promise<void>;
+    postList: (id: string, name: string, position: string) => Promise<void>;
 };
 
 type stateType = {
@@ -30,6 +30,7 @@ type stateType = {
     warningText: string,
     addListModalShown: boolean,
     newListIsValide: boolean,
+    newListName: string,
 };
 
 // let boardId:string;
@@ -45,6 +46,7 @@ class Board extends React.Component<propsType, stateType> {
             warningText: "",
             addListModalShown: false,
             newListIsValide: false,
+            newListName: "",
         };
         this.textInput = React.createRef();
 
@@ -91,18 +93,17 @@ class Board extends React.Component<propsType, stateType> {
         this.setState({ warningText: "" });
 
         this.setState({ editedBoardTitle: this.props.board.title });
-        this.setState({ editedBoardIsValide: validateBoard(this.props.board.title) });
+        this.setState({ editedBoardIsValide: validateTitle(this.props.board.title) });
     }
 
     editOff() {
-
         this.setState({ editOn: false });
         this.editBoard(this.props.board.id, this.state.editedBoardTitle);
 
     }
     handleChange(e: ChangeEvent<HTMLInputElement>) {
         this.setState({ editedBoardTitle: e.target.value });
-        this.setState({ editedBoardIsValide: validateBoard(e.target.value) });
+        this.setState({ editedBoardIsValide: validateTitle(e.target.value) });
     }
 
     handleKeyUp(e: KeyboardEvent) {
@@ -121,20 +122,26 @@ class Board extends React.Component<propsType, stateType> {
         this.setState({ addListModalShown: false });
     }
 
-    updateNewListName() {
-
+    updateNewListName(name: string) {
+        this.setState({newListName: name});
+        this.setState({newListIsValide: validateTitle(name)});
     }
 
-    addNewList() {
-
+    async addNewList() {
+        
+        
+        this.setState({ addListModalShown: false });
+        await this.props.postList(this.props.board.id, this.state.newListName, 
+            Object.keys(this.props.board.lists).length ? (Object.keys(this.props.board.lists).length + 1).toString() : "1");
+    await this.props.getBoard(this.props.board.id);
     }
 
     render() {
 
         let lists: JSX.Element[];
         if (this.props.board.lists && JSON.stringify(this.props.board.lists) !== '{}') {
-            lists = this.props.board.lists.map((item, index) => {
-                return <List title={item.title} cards={item.cards} key={index}></List>
+            lists = Object.values(this.props.board.lists).map((item) => {
+                return <List title={item.title} cards={item.cards} key={item.id}></List>
             });
         } else {
             lists = [];
@@ -169,5 +176,5 @@ const mapStateToProps = (state: stateType) => ({
     ...state.board,
 });
 
-export default withRouter(connect(mapStateToProps, { getBoard, editBoard })(Board));
+export default withRouter(connect(mapStateToProps, { getBoard, editBoard, postList })(Board));
 // export default connect(mapStateToProps, { getBoard })(Board);

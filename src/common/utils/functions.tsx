@@ -1,4 +1,4 @@
-export function validateBoard(title: string): boolean {
+export function validateTitle(title: string): boolean {
 
   const validationRegex = /^[a-z0-9а-я\s._-]+$/i;
   // if (title && title.length > 0 && validationRegex.test(title)) {
