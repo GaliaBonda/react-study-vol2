@@ -1,5 +1,8 @@
+import Board from "../../../pages/Home/components/Board/Board";
+
 const initialState = {
     board: {
+        id: 0,
         title: "Моя тестовая доска",
         lists: [ {
                 id: 1,
@@ -40,7 +43,7 @@ export default function reducer(state = initialState, action: { type: string, pa
             };
         case 'EDIT_BOARD':
             return {
-                board: action.payload,
+                board: {...action.payload, lists: state.board.lists, id: state.board.id},
             };
         case 'POST_LIST':
             return {
@@ -55,8 +58,11 @@ export default function reducer(state = initialState, action: { type: string, pa
                     ...state.board,
                     lists: state.board.lists.map((item) => {
                         if (item.position == action.payload.position) {
-                            item = action.payload;
+                            return item = {...action.payload, cards: item.cards, id: item.id};
+                        } else {
+                          return item;  
                         }
+                        
                     }),
                 },
     };

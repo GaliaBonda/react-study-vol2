@@ -146,7 +146,7 @@ class Board extends React.Component<propsType, stateType> {
         this.setState({editedListTitle: e.target.value});
         this.setState({editedListTitleValid: validateTitle(e.target.value)});
         // console.log(id, position);
-        await this.props.editList (this.props.board.id, id, e.target.value, position);
+        // await this.props.editList (this.props.board.id, id, e.target.value, position);
         
     }
 

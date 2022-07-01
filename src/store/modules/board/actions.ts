@@ -30,7 +30,7 @@ export const getBoard = (id: string) => async (dispatch: Dispatch) => {
 
 export const editBoard = (id: string, name: string) => async (dispatch: Dispatch) => {
     try {
-        const data = await api.put(`/board/${id}`, {title: name});
+        await api.put(`/board/${id}`, {title: name});
         // console.log(data);
         
 await dispatch({type: 'EDIT_BOARD', payload: {id: id, title: name}});
@@ -84,7 +84,7 @@ export const editList =
         position: position,
       };
 
-    await api.post(`/board/${boardId}/list/${listId}`, list);
+    await api.put(`/board/${boardId}/list/${listId}`, list);
     // // await api.delete(`/board/${id}/list/${1656600851486}`);
     await dispatch({ type: 'EDIT_LIST', payload: { ...list} });
     } catch (e) {
