@@ -9,6 +9,7 @@ import IBoard from "../../common/interfaces/IBoard";
 import { ChangeEvent, KeyboardEvent } from 'react';
 import { validateTitle } from "../../common/utils/functions";
 import AddModal from "../../components/AddModal/AddModal";
+import { stringify } from "querystring";
 
 
 type propsType = {
@@ -37,6 +38,7 @@ type stateType = {
     editedListTitleValid: boolean,
     newCardName: string,
     newCardIsValide: boolean,
+    editedCardTitle: string,
 };
 
 // let boardId:string;
@@ -57,6 +59,7 @@ class Board extends React.Component<propsType, stateType> {
             editedListTitleValid: true,
             newCardName: "",
             newCardIsValide: false,
+            editedCardTitle: '',
         };
         this.textInput = React.createRef();
 
@@ -73,6 +76,7 @@ class Board extends React.Component<propsType, stateType> {
         this.updateListTitle = this.updateListTitle.bind(this);
         this.updateNewCardName = this.updateNewCardName.bind(this);
         this.addNewCard = this.addNewCard.bind(this);
+        this.editCard = this.editCard.bind(this);
     }
 
     componentDidMount() {
@@ -179,6 +183,10 @@ class Board extends React.Component<propsType, stateType> {
         }
     }
 
+    editCard(e: ChangeEvent<HTMLInputElement>) {
+        this.setState({editedCardTitle: e.target.value});
+    }
+
     render() {
 
         let lists: JSX.Element[];
@@ -191,6 +199,7 @@ class Board extends React.Component<propsType, stateType> {
                     newCardIsValide={this.state.newCardIsValide} 
                     updateNewCardName={this.updateNewCardName}
                     addNewCard={() => this.addNewCard(item.id, item.position)}
+                    handleCardChange={this.editCard} editedCardTitle={this.state.editedCardTitle}
                     />
             });
         } else {

@@ -1,6 +1,5 @@
 import React, { ChangeEvent, KeyboardEvent, useState } from "react";
 import ICard from "../../../../common/interfaces/ICard";
-import { validateTitle } from "../../../../common/utils/functions";
 import AddModal from "../../../../components/AddModal/AddModal";
 import Card from "../Card/Card";
 import './list.scss'
@@ -12,11 +11,13 @@ type propsType = {
     position: string;
     id: string;
     handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
+    handleCardChange: (e: ChangeEvent<HTMLInputElement>) => void;
     updateTitle: () => void;
 
     newCardIsValide: boolean;
     updateNewCardName: (value: string) => void;
     addNewCard: () => void;
+    editedCardTitle: string;
 };
 export default function List(props: propsType) {
     const [editModeOn, setEditMode] = useState(false);
@@ -24,9 +25,7 @@ export default function List(props: propsType) {
     const [addCardModalShown, setModalShown] = useState(false);
     // const [newCardTitle, setNewCardTitle] = useState('');
     // const [newCardIsValide, setCardValide] = useState(false);
-    let cards = props.cards.map((item, index) => {
-        return <Card title={item.title} key={index}/>
-    });
+    
     let editOn = () => {
         setEditMode(true);
         setInputValue(props.title);
@@ -39,7 +38,7 @@ export default function List(props: propsType) {
         if (e.key === 'Enter') {
             e.preventDefault();
             editOff();
-            props.updateTitle();
+            
         }
     }
     let handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -56,14 +55,14 @@ export default function List(props: propsType) {
         setModalShown(false);
         props.addNewCard();
     }
-    // let updateNewCardName = (title: string) => {
-    //     setNewCardTitle(title);
-    //     setCardValide(validateTitle(title));
-    // }
-    // let addNewCard = () => {
-
-    // }
+    const handleCardChange = (e: ChangeEvent<HTMLInputElement>) => {
+        props.handleCardChange(e);
+    };
     
+
+    let cards = props.cards.map((item, index) => {
+        return <Card title={item.title} key={index} handleCardChange={handleCardChange} editedCardTitle={props.editedCardTitle}/>
+    });
     return (<li className="list">
         {!editModeOn && <h2 className="list__title" onClick={editOn}>{props.title}</h2>}
         {editModeOn && <input autoFocus className="list__title list__input" type="text" value={inputValue} 
