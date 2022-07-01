@@ -65,6 +65,7 @@ class Board extends React.Component<propsType, stateType> {
         this.updateListName = this.updateListName.bind(this);
         this.addNewList = this.addNewList.bind(this);
         this.editListTitle = this.editListTitle.bind(this);
+        this.updateListTitle = this.updateListTitle.bind(this);
     }
 
     componentDidMount() {
@@ -129,25 +130,32 @@ class Board extends React.Component<propsType, stateType> {
     }
 
     updateListName(name: string) {
-        this.setState({newListName: name});
-        this.setState({newListIsValide: validateTitle(name)});
+        this.setState({ newListName: name });
+        this.setState({ newListIsValide: validateTitle(name) });
     }
 
     async addNewList() {
-        
-        
+
+
         this.setState({ addListModalShown: false });
-        await this.props.postList(this.props.board.id, this.state.newListName, 
+        await this.props.postList(this.props.board.id, this.state.newListName,
             Object.keys(this.props.board.lists).length ? (Object.keys(this.props.board.lists).length + 1).toString() : "1");
-    await this.props.getBoard(this.props.board.id);
+        await this.props.getBoard(this.props.board.id);
     }
 
-    async editListTitle(id: string, position: string, e: ChangeEvent<HTMLInputElement>) {
-        this.setState({editedListTitle: e.target.value});
-        this.setState({editedListTitleValid: validateTitle(e.target.value)});
+    editListTitle(e: ChangeEvent<HTMLInputElement>) {
+        this.setState({ editedListTitle: e.target.value });
+        this.setState({ editedListTitleValid: validateTitle(e.target.value) });
         // console.log(id, position);
         // await this.props.editList (this.props.board.id, id, e.target.value, position);
-        
+
+    }
+    async updateListTitle(id: string, position: string) {
+        if (this.state.editedListTitleValid) {
+            await this.props.editList(this.props.board.id, id, this.state.editedListTitle, position);
+
+        }
+
     }
 
     render() {
@@ -155,9 +163,9 @@ class Board extends React.Component<propsType, stateType> {
         let lists: JSX.Element[];
         if (this.props.board.lists && JSON.stringify(this.props.board.lists) !== '{}') {
             lists = this.props.board.lists.map((item, index) => {
-                return <List title={item.title} handleChange={(e) => this.editListTitle(item.id, item.position, e)}
+                return <List title={item.title} handleChange={this.editListTitle}
                     cards={item.cards ? Object.values(item.cards) : []}
-                    key={item.id ? item.id : index} position={item.position}/>
+                    key={item.id ? item.id : index} position={item.position} updateTitle={() => this.updateListTitle(item.id, item.position)} />
             });
         } else {
             lists = [];

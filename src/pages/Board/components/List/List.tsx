@@ -7,7 +7,8 @@ type propsType = {
     title: string;
     cards: ICard[];
     position: string;
-    handleChange: (e: ChangeEvent<HTMLInputElement>) => void
+    handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
+    updateTitle: () => void;
 };
 export default function List(props: propsType) {
     const [editModeOn, setEditMode] = useState(false);
@@ -21,11 +22,13 @@ export default function List(props: propsType) {
     }
     let editOff = () => {
         setEditMode(false);
+        props.updateTitle();
     }
     let handleKeyDown = (e: KeyboardEvent) => {
-        if (e.key == 'Enter') {
+        if (e.key === 'Enter') {
             e.preventDefault();
             editOff();
+            props.updateTitle();
         }
     }
     let handleChange = (e: ChangeEvent<HTMLInputElement>) => {
