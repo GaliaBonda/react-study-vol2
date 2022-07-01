@@ -31,6 +31,7 @@ type stateType = {
     addListModalShown: boolean,
     newListIsValide: boolean,
     newListName: string,
+    editedListTitle: string,
 };
 
 // let boardId:string;
@@ -47,6 +48,7 @@ class Board extends React.Component<propsType, stateType> {
             addListModalShown: false,
             newListIsValide: false,
             newListName: "",
+            editedListTitle: ""
         };
         this.textInput = React.createRef();
 
@@ -57,8 +59,9 @@ class Board extends React.Component<propsType, stateType> {
         this.handleKeyUp = this.handleKeyUp.bind(this);
         this.showAddListModal = this.showAddListModal.bind(this);
         this.closeAddModal = this.closeAddModal.bind(this);
-        this.updateNewListName = this.updateNewListName.bind(this);
+        this.updateListName = this.updateListName.bind(this);
         this.addNewList = this.addNewList.bind(this);
+        this.editListTitle = this.editListTitle.bind(this);
     }
 
     componentDidMount() {
@@ -122,7 +125,7 @@ class Board extends React.Component<propsType, stateType> {
         this.setState({ addListModalShown: false });
     }
 
-    updateNewListName(name: string) {
+    updateListName(name: string) {
         this.setState({newListName: name});
         this.setState({newListIsValide: validateTitle(name)});
     }
@@ -136,12 +139,18 @@ class Board extends React.Component<propsType, stateType> {
     await this.props.getBoard(this.props.board.id);
     }
 
+    editListTitle(title: string) {
+        this.setState({editedListTitle: title});
+    }
+
     render() {
 
         let lists: JSX.Element[];
         if (this.props.board.lists && JSON.stringify(this.props.board.lists) !== '{}') {
             lists = this.props.board.lists.map((item, index) => {
-                return <List title={item.title} cards={item.cards ? Object.values(item.cards) : []} key={item.id ? item.id : index}></List>
+                return <List title={item.title} handleChange={this.editListTitle}
+                    cards={item.cards ? Object.values(item.cards) : []}
+                    key={item.id ? item.id : index}></List>
             });
         } else {
             lists = [];
@@ -162,7 +171,7 @@ class Board extends React.Component<propsType, stateType> {
                 <button className="board__btn btn" onClick={this.showAddListModal}>Add list</button>
                 <AddModal title="Add new list" shown={this.state.addListModalShown} isValide={this.state.newListIsValide}
                     handleClose={this.closeAddModal}
-                    handleChange={this.updateNewListName}
+                    handleChange={this.updateListName}
                     handleOk={this.addNewList} />
             </div>
 
