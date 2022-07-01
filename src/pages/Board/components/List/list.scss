@@ -8,6 +8,7 @@
         padding: 0.1em;
         text-align: center;
         margin-bottom: 1em;
+        line-height: 1.5em;
     }
     &__btn {
         border: 1px solid rgba(0, 0, 0, 0.5);
@@ -17,6 +18,10 @@
         background-color: white;
         border-radius: 15%;
         padding: 0;
+    }
+    &__input {
+        font-weight: bold;
+        width: 100%;
     }
 
 }

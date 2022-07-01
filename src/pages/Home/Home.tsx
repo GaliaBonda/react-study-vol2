@@ -86,7 +86,6 @@ class Home extends React.Component<propsType, stateType> {
         
         );
     });
-    // console.log(this.props.boards);
     
     return (
         <div className="home">

@@ -66,6 +66,34 @@ console.error(e);
       dispatch({ type: 'ERROR_ACTION_TYPE'});
     }
   };
+export const editList =
+  (boardId: string, listId: string, title: string, position: string) =>
+  async (dispatch: Dispatch): Promise<void> => {
+      try {
+        let res: AxiosResponse & {accessToken: string} = await api.post('/login', {
+            email: "test@gmail.com", password: "testpass"
+        });
+        api.interceptors.request.use(function (config) {
+            const token = res.accessToken;
+            if (config.headers) config.headers.Authorization =  'Bearer ' + token;
+        
+            return config;
+        });
+      const list = {
+        title: title,
+        position: position,
+      };
+
+    await api.post(`/board/${boardId}/list/${listId}`, list);
+    // // await api.delete(`/board/${id}/list/${1656600851486}`);
+    await dispatch({ type: 'EDIT_LIST', payload: { ...list} });
+    } catch (e) {
+console.error(e);
+      dispatch({ type: 'ERROR_ACTION_TYPE'});
+    }
+  };
+
+  
 
 
 

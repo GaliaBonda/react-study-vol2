@@ -4,7 +4,7 @@ import './board.scss'
 import { Link, Params } from "react-router-dom";
 import { withRouter } from "../../common/utils/withRouter";
 import { connect } from "react-redux";
-import { editBoard, getBoard, postList } from "../../store/modules/board/actions";
+import { editBoard, editList, getBoard, postList } from "../../store/modules/board/actions";
 import IBoard from "../../common/interfaces/IBoard";
 import { ChangeEvent, KeyboardEvent } from 'react';
 import { validateTitle } from "../../common/utils/functions";
@@ -20,6 +20,7 @@ type propsType = {
     getBoard: (id: string) => Promise<void>;
     editBoard: (id: string, name: string) => Promise<void>;
     postList: (id: string, name: string, position: string) => Promise<void>;
+    editList: (boardId: string, listId: string, title: string, position: string) => Promise<void>;
 };
 
 type stateType = {
@@ -32,6 +33,7 @@ type stateType = {
     newListIsValide: boolean,
     newListName: string,
     editedListTitle: string,
+    editedListTitleValid: boolean,
 };
 
 // let boardId:string;
@@ -48,7 +50,8 @@ class Board extends React.Component<propsType, stateType> {
             addListModalShown: false,
             newListIsValide: false,
             newListName: "",
-            editedListTitle: ""
+            editedListTitle: "",
+            editedListTitleValid: true,
         };
         this.textInput = React.createRef();
 
@@ -139,8 +142,12 @@ class Board extends React.Component<propsType, stateType> {
     await this.props.getBoard(this.props.board.id);
     }
 
-    editListTitle(title: string) {
-        this.setState({editedListTitle: title});
+    async editListTitle(id: string, position: string, e: ChangeEvent<HTMLInputElement>) {
+        this.setState({editedListTitle: e.target.value});
+        this.setState({editedListTitleValid: validateTitle(e.target.value)});
+        // console.log(id, position);
+        await this.props.editList (this.props.board.id, id, e.target.value, position);
+        
     }
 
     render() {
@@ -148,9 +155,9 @@ class Board extends React.Component<propsType, stateType> {
         let lists: JSX.Element[];
         if (this.props.board.lists && JSON.stringify(this.props.board.lists) !== '{}') {
             lists = this.props.board.lists.map((item, index) => {
-                return <List title={item.title} handleChange={this.editListTitle}
+                return <List title={item.title} handleChange={(e) => this.editListTitle(item.id, item.position, e)}
                     cards={item.cards ? Object.values(item.cards) : []}
-                    key={item.id ? item.id : index}></List>
+                    key={item.id ? item.id : index} position={item.position}/>
             });
         } else {
             lists = [];
@@ -185,5 +192,5 @@ const mapStateToProps = (state: stateType) => ({
     ...state.board,
 });
 
-export default withRouter(connect(mapStateToProps, { getBoard, editBoard, postList })(Board));
+export default withRouter(connect(mapStateToProps, { getBoard, editBoard, postList, editList })(Board));
 // export default connect(mapStateToProps, { getBoard })(Board);

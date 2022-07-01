@@ -8,14 +8,16 @@ const initialState = {
                     { id: 1, title: "помыть кота" },
                     { id: 2, title: "приготовить суп" },
                     { id: 3, title: "сходить в магазин" }
-                ]
+                ],
+                position: 1,
             },
             {
                 id: 2,
                 title: "В процессе",
                 cards: [
                     { id: 4, title: "посмотреть сериал" }
-                ]
+                ],
+                position: 2,
             },
             {
                 id: 3,
@@ -23,7 +25,8 @@ const initialState = {
                 cards: [
                     { id: 5, title: "сделать домашку" },
                     { id: 6, title: "погулять с собакой" }
-                ]
+                ],
+                position: 3,
             }
         ],
     }
@@ -44,6 +47,17 @@ export default function reducer(state = initialState, action: { type: string, pa
                 board: {
                     ...state.board,
                     lists: [...state.board.lists, {...action.payload}]
+                },
+    };
+        case 'EDIT_LIST':
+            return {
+                board: {
+                    ...state.board,
+                    lists: state.board.lists.map((item) => {
+                        if (item.position == action.payload.position) {
+                            item = action.payload;
+                        }
+                    }),
                 },
     };
         default: {
