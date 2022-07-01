@@ -4,7 +4,7 @@ import './board.scss'
 import { Link, Params } from "react-router-dom";
 import { withRouter } from "../../common/utils/withRouter";
 import { connect } from "react-redux";
-import { editBoard, editList, getBoard, postList } from "../../store/modules/board/actions";
+import { editBoard, editList, getBoard, postList, postCard } from "../../store/modules/board/actions";
 import IBoard from "../../common/interfaces/IBoard";
 import { ChangeEvent, KeyboardEvent } from 'react';
 import { validateTitle } from "../../common/utils/functions";
@@ -21,6 +21,7 @@ type propsType = {
     editBoard: (id: string, name: string) => Promise<void>;
     postList: (id: string, name: string, position: string) => Promise<void>;
     editList: (boardId: string, listId: string, title: string, position: string) => Promise<void>;
+    postCard: (id: string, listId: string, title: string, position: string) => Promise<void>;
 };
 
 type stateType = {
@@ -34,6 +35,8 @@ type stateType = {
     newListName: string,
     editedListTitle: string,
     editedListTitleValid: boolean,
+    newCardName: string,
+    newCardIsValide: boolean,
 };
 
 // let boardId:string;
@@ -52,6 +55,8 @@ class Board extends React.Component<propsType, stateType> {
             newListName: "",
             editedListTitle: "",
             editedListTitleValid: true,
+            newCardName: "",
+            newCardIsValide: false,
         };
         this.textInput = React.createRef();
 
@@ -62,10 +67,12 @@ class Board extends React.Component<propsType, stateType> {
         this.handleKeyUp = this.handleKeyUp.bind(this);
         this.showAddListModal = this.showAddListModal.bind(this);
         this.closeAddModal = this.closeAddModal.bind(this);
-        this.updateListName = this.updateListName.bind(this);
+        this.updateNewListName = this.updateNewListName.bind(this);
         this.addNewList = this.addNewList.bind(this);
         this.editListTitle = this.editListTitle.bind(this);
         this.updateListTitle = this.updateListTitle.bind(this);
+        this.updateNewCardName = this.updateNewCardName.bind(this);
+        this.addNewCard = this.addNewCard.bind(this);
     }
 
     componentDidMount() {
@@ -129,7 +136,7 @@ class Board extends React.Component<propsType, stateType> {
         this.setState({ addListModalShown: false });
     }
 
-    updateListName(name: string) {
+    updateNewListName(name: string) {
         this.setState({ newListName: name });
         this.setState({ newListIsValide: validateTitle(name) });
     }
@@ -157,15 +164,34 @@ class Board extends React.Component<propsType, stateType> {
         }
 
     }
+    updateNewCardName(title: string) {
+        this.setState({newCardName: title});
+        this.setState({newCardIsValide: validateTitle(title)});
+    }
+
+    async addNewCard(id: string, position: string) {
+        if (this.state.newCardIsValide) {
+            await this.props.postCard(this.props.board.id, id, this.state.newCardName, position);
+            await this.props.getBoard(this.props.board.id);
+            // id: string, listId: string, title: string, position: string
+            // console.log(this.state.newCardName, id, position);
+            
+        }
+    }
 
     render() {
 
         let lists: JSX.Element[];
         if (this.props.board.lists && JSON.stringify(this.props.board.lists) !== '{}') {
             lists = this.props.board.lists.map((item, index) => {
-                return <List title={item.title} handleChange={this.editListTitle}
+                return <List title={item.title} id={item.id} handleChange={this.editListTitle}
                     cards={item.cards ? Object.values(item.cards) : []}
-                    key={item.id ? item.id : index} position={item.position} updateTitle={() => this.updateListTitle(item.id, item.position)} />
+                    key={item.id ? item.id : index} position={item.position} 
+                    updateTitle={() => this.updateListTitle(item.id, item.position)}
+                    newCardIsValide={this.state.newCardIsValide} 
+                    updateNewCardName={this.updateNewCardName}
+                    addNewCard={() => this.addNewCard(item.id, item.position)}
+                    />
             });
         } else {
             lists = [];
@@ -186,7 +212,7 @@ class Board extends React.Component<propsType, stateType> {
                 <button className="board__btn btn" onClick={this.showAddListModal}>Add list</button>
                 <AddModal title="Add new list" shown={this.state.addListModalShown} isValide={this.state.newListIsValide}
                     handleClose={this.closeAddModal}
-                    handleChange={this.updateListName}
+                    handleChange={this.updateNewListName}
                     handleOk={this.addNewList} />
             </div>
 
@@ -200,5 +226,5 @@ const mapStateToProps = (state: stateType) => ({
     ...state.board,
 });
 
-export default withRouter(connect(mapStateToProps, { getBoard, editBoard, postList, editList })(Board));
+export default withRouter(connect(mapStateToProps, { getBoard, editBoard, postList, editList, postCard })(Board));
 // export default connect(mapStateToProps, { getBoard })(Board);
