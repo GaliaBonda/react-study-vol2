@@ -3,6 +3,7 @@ import './card.scss'
 
 type propsType = {
     title: string;
+    position: string;
     handleCardChange: (e: ChangeEvent<HTMLInputElement>) => void;
     editedCardTitle: string;
     updateCardTitle: () => void;

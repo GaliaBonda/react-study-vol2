@@ -23,7 +23,7 @@ type propsType = {
     postList: (id: string, name: string, position: string) => Promise<void>;
     editList: (boardId: string, listId: string, title: string, position: string) => Promise<void>;
     postCard: (id: string, listId: string, title: string, position: string) => Promise<void>;
-    editCard: (id: string, cardId: string, title: string) => Promise<void>;
+    editCard: (id: string, cardId: string, listId: string, title: string) => Promise<void>;
 };
 
 type stateType = {
@@ -192,10 +192,10 @@ class Board extends React.Component<propsType, stateType> {
         this.setState({editedCardTitleValid: validateTitle(e.target.value)});
     }
 
-    async updateCardTitle(cardId: string) {
-if (this.state.editedCardTitleValid) {
-            await this.props.editCard(this.props.board.id, cardId, this.state.editedCardTitle);
-
+    async updateCardTitle(cardId: string, position: string, listId: string) {
+        if (this.state.editedCardTitleValid) {
+        await this.props.editCard(this.props.board.id, cardId, listId, this.state.editedCardTitle);
+        await this.props.getBoard(this.props.board.id);
         }
 
     }
@@ -211,9 +211,9 @@ if (this.state.editedCardTitleValid) {
                     updateTitle={() => this.updateListTitle(item.id, item.position)}
                     newCardIsValide={this.state.newCardIsValide} 
                     updateNewCardName={this.updateNewCardName}
-                    addNewCard={() => this.addNewCard(item.id, item.position)}
+                    addNewCard={(position) => this.addNewCard(item.id, position)}
                     handleCardChange={this.editCard} editedCardTitle={this.state.editedCardTitle}
-                    updateCardTitle={this.updateCardTitle}
+                    updateCardTitle={(cardId, position) => this.updateCardTitle(cardId, position, item.id)}
                     />
             });
         } else {

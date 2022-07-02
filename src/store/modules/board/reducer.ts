@@ -1,5 +1,3 @@
-import Board from "../../../pages/Home/components/Board/Board";
-
 const initialState = {
     board: {
         id: 0,
@@ -64,6 +62,26 @@ export default function reducer(state = initialState, action: { type: string, pa
                         }
                         
                     }),
+                },
+    };
+        case 'POST_CARD':
+            
+            const updatedLists = [...state.board.lists];
+            const targetListIndex = updatedLists.findIndex((item) => {
+                return item.id == action.payload.list_id;
+            });
+            
+            
+            updatedLists[targetListIndex].cards = {
+                ...updatedLists[targetListIndex].cards,
+                '1': action.payload
+            };
+            console.log(updatedLists);
+            // const updatedList = state.board.lists.map
+            return {
+                board: {
+                    ...state.board,
+                    lists: updatedLists,
                 },
     };
         default: {

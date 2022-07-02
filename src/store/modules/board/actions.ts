@@ -106,22 +106,22 @@ export const editList =
         
             return config;
         });
-      const card = {
-        title: title,
-        position: position,
-        list_id: listId,
-      };
+        const card = {
+          title: title,
+          position: position,
+          list_id: listId,
+        };
 
-    await api.post(`/board/${id}/card`, card);
-    // await api.delete(`/board/${id}/list/${1656600851486}`);
-    await dispatch({ type: 'POST_CARD', payload: { ...card} });
+        await api.post(`/board/${id}/card`, card);
+        // await api.delete(`/board/${id}/list/${1656600851486}`);
+        await dispatch({ type: 'POST_CARD', payload: { ...card} });
     } catch (e) {
-console.error(e);
+    console.error(e);
       dispatch({ type: 'ERROR_ACTION_TYPE'});
     }
   };
     export const editCard =
-  (id: string, cardId: string, title: string) =>
+  (id: string, cardId: string, listId: string, title: string) =>
   async (dispatch: Dispatch): Promise<void> => {
       try {
         let res: AxiosResponse & {accessToken: string} = await api.post('/login', {
@@ -133,17 +133,24 @@ console.error(e);
         
             return config;
         });
-        console.log(id, cardId, title);
+        // console.log('boardid:' + id, 'cardid:' + cardId, title, 'listid:' + listId);
         
-    //   const card = {
-    //     title: title,
-    //     position: position,
-    //     list_id: listId,
-    //   };
+      const card = {
+        title: title,
+        list_id: Number.parseInt(listId),
+        };
+//         {
+//   title: "to pet a cat",
+//   list_id: 1
+// }
 
-    // await api.post(`/board/${id}/card`, card);
-    // // await api.delete(`/board/${id}/list/${1656600851486}`);
-    // await dispatch({ type: 'POST_CARD', payload: { ...card} });
+
+
+        await api.put(`/board/${id}/card/${cardId}`, card);
+        ///board/<id>/card/<id>
+
+    // await api.delete(`/board/${id}/list/${1656600851486}`);
+    await dispatch({ type: 'EDIT_CARD', payload: { ...card} });
     } catch (e) {
 console.error(e);
       dispatch({ type: 'ERROR_ACTION_TYPE'});

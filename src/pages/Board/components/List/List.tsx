@@ -16,8 +16,8 @@ type propsType = {
 
     newCardIsValide: boolean;
     updateNewCardName: (value: string) => void;
-    addNewCard: () => void;
-    updateCardTitle: (cardId: string) => void;
+    addNewCard: (position: string) => void;
+    updateCardTitle: (cardId: string, position: string) => void;
     editedCardTitle: string;
 };
 export default function List(props: propsType) {
@@ -54,20 +54,22 @@ export default function List(props: propsType) {
     }
     let handleOk = () => {
         setModalShown(false);
-        props.addNewCard();
+        props.addNewCard(props.position);
     }
     const handleCardChange = (e: ChangeEvent<HTMLInputElement>) => {
         props.handleCardChange(e);
     };
 
-    const updateCardTitle = (id: string) => {
-        props.updateCardTitle(id);
+    const updateCardTitle = (id: string, position: string) => {
+        // console.log(id);
+        
+        props.updateCardTitle(id,position);
     }
     
 
-    let cards = props.cards.map((item, index) => {
-        return <Card title={item.title} key={index} handleCardChange={handleCardChange}
-            editedCardTitle={props.editedCardTitle} updateCardTitle={() => updateCardTitle(item.id)} />
+    let cards = props.cards.map((item) => {
+        return <Card title={item.title} key={item.id} position={item.position} handleCardChange={handleCardChange}
+            editedCardTitle={props.editedCardTitle} updateCardTitle={() => updateCardTitle(item.id, item.position)} />
     });
     return (<li className="list">
         {!editModeOn && <h2 className="list__title" onClick={editOn}>{props.title}</h2>}
