@@ -5,6 +5,7 @@ type propsType = {
     title: string;
     handleCardChange: (e: ChangeEvent<HTMLInputElement>) => void;
     editedCardTitle: string;
+    updateCardTitle: () => void;
 };
 
 export default function Card(props: propsType) {
@@ -17,6 +18,7 @@ export default function Card(props: propsType) {
     }
     const editOff = () => {
         setEditMode(false);
+        props.updateCardTitle();
     }
     const handleKeyDown = (e: KeyboardEvent) => {
         if (e.key === 'Enter') {
@@ -26,13 +28,14 @@ export default function Card(props: propsType) {
         }
     }
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setCardTitle(props.editedCardTitle);
+        setCardTitle(e.target.value);
         props.handleCardChange(e);
     }
 
     return (<div className="card">
         {!editModeOn && <h3 className="card__title" onClick={editOn}>{props.title}</h3>}
-        {editModeOn && <input autoFocus className="card__title card__input" value={editCardTitle} type="text" 
+        {editModeOn && <input autoFocus className="card__title card__input" value={editCardTitle}
+            type="text" 
         onChange={handleChange} onBlur={editOff} onKeyDown={handleKeyDown}/>}
     </div>)
   }

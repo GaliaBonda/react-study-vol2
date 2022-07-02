@@ -4,7 +4,7 @@ import './board.scss'
 import { Link, Params } from "react-router-dom";
 import { withRouter } from "../../common/utils/withRouter";
 import { connect } from "react-redux";
-import { editBoard, editList, getBoard, postList, postCard } from "../../store/modules/board/actions";
+import { editBoard, editList, getBoard, postList, postCard, editCard } from "../../store/modules/board/actions";
 import IBoard from "../../common/interfaces/IBoard";
 import { ChangeEvent, KeyboardEvent } from 'react';
 import { validateTitle } from "../../common/utils/functions";
@@ -23,6 +23,7 @@ type propsType = {
     postList: (id: string, name: string, position: string) => Promise<void>;
     editList: (boardId: string, listId: string, title: string, position: string) => Promise<void>;
     postCard: (id: string, listId: string, title: string, position: string) => Promise<void>;
+    editCard: (id: string, cardId: string, title: string) => Promise<void>;
 };
 
 type stateType = {
@@ -39,6 +40,7 @@ type stateType = {
     newCardName: string,
     newCardIsValide: boolean,
     editedCardTitle: string,
+    editedCardTitleValid: boolean,
 };
 
 // let boardId:string;
@@ -60,6 +62,7 @@ class Board extends React.Component<propsType, stateType> {
             newCardName: "",
             newCardIsValide: false,
             editedCardTitle: '',
+            editedCardTitleValid: true,
         };
         this.textInput = React.createRef();
 
@@ -77,6 +80,7 @@ class Board extends React.Component<propsType, stateType> {
         this.updateNewCardName = this.updateNewCardName.bind(this);
         this.addNewCard = this.addNewCard.bind(this);
         this.editCard = this.editCard.bind(this);
+        this.updateCardTitle = this.updateCardTitle.bind(this);
     }
 
     componentDidMount() {
@@ -184,7 +188,16 @@ class Board extends React.Component<propsType, stateType> {
     }
 
     editCard(e: ChangeEvent<HTMLInputElement>) {
-        this.setState({editedCardTitle: e.target.value});
+        this.setState({ editedCardTitle: e.target.value });
+        this.setState({editedCardTitleValid: validateTitle(e.target.value)});
+    }
+
+    async updateCardTitle(cardId: string) {
+if (this.state.editedCardTitleValid) {
+            await this.props.editCard(this.props.board.id, cardId, this.state.editedCardTitle);
+
+        }
+
     }
 
     render() {
@@ -200,6 +213,7 @@ class Board extends React.Component<propsType, stateType> {
                     updateNewCardName={this.updateNewCardName}
                     addNewCard={() => this.addNewCard(item.id, item.position)}
                     handleCardChange={this.editCard} editedCardTitle={this.state.editedCardTitle}
+                    updateCardTitle={this.updateCardTitle}
                     />
             });
         } else {
@@ -235,5 +249,5 @@ const mapStateToProps = (state: stateType) => ({
     ...state.board,
 });
 
-export default withRouter(connect(mapStateToProps, { getBoard, editBoard, postList, editList, postCard })(Board));
+export default withRouter(connect(mapStateToProps, { getBoard, editBoard, postList, editList, postCard, editCard })(Board));
 // export default connect(mapStateToProps, { getBoard })(Board);

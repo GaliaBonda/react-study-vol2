@@ -120,16 +120,34 @@ console.error(e);
       dispatch({ type: 'ERROR_ACTION_TYPE'});
     }
   };
+    export const editCard =
+  (id: string, cardId: string, title: string) =>
+  async (dispatch: Dispatch): Promise<void> => {
+      try {
+        let res: AxiosResponse & {accessToken: string} = await api.post('/login', {
+            email: "test@gmail.com", password: "testpass"
+        });
+        api.interceptors.request.use(function (config) {
+            const token = res.accessToken;
+            if (config.headers) config.headers.Authorization =  'Bearer ' + token;
+        
+            return config;
+        });
+        console.log(id, cardId, title);
+        
+    //   const card = {
+    //     title: title,
+    //     position: position,
+    //     list_id: listId,
+    //   };
+
+    // await api.post(`/board/${id}/card`, card);
+    // // await api.delete(`/board/${id}/list/${1656600851486}`);
+    // await dispatch({ type: 'POST_CARD', payload: { ...card} });
+    } catch (e) {
+console.error(e);
+      dispatch({ type: 'ERROR_ACTION_TYPE'});
+    }
+  };
 
 
-
-
-// export const createBoard = () => async (dispatch: Dispatch) => {
-//     try {
-//         const data = await api.post("/board/board_id", {payload: ""});
-//         await dispatch({type: 'CREATE_BOARD', payload: data});
-//     } catch (e) {
-//         console.log(e)
-//         dispatch({type: 'ERROR_ACTION_TYPE'});
-//     }
-// }
