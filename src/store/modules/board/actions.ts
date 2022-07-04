@@ -112,9 +112,11 @@ export const editList =
           list_id: listId,
         };
 
-        await api.post(`/board/${id}/card`, card);
-        // await api.delete(`/board/${id}/list/${1656600851486}`);
-        await dispatch({ type: 'POST_CARD', payload: { ...card} });
+        let data: { result: string, id: number } = await api.post(`/board/${id}/card`, card);
+        // await api.delete(`/board/${id}/card/${1656919663849}`);
+        // await api.delete(`/board/${id}/card/${1656919800154}`);
+        
+        await dispatch({ type: 'POST_CARD', payload: { ...card, id: data.id.toString()} });
     } catch (e) {
     console.error(e);
       dispatch({ type: 'ERROR_ACTION_TYPE'});
