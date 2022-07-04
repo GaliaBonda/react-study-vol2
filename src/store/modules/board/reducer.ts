@@ -76,7 +76,7 @@ export default function reducer(state = initialState, action: { type: string, pa
                 ...updatedLists[targetListIndex].cards,
                 '1': action.payload
             };
-            console.log(updatedLists);
+            // console.log(updatedLists);
             // const updatedList = state.board.lists.map
             return {
                 board: {

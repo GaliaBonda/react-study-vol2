@@ -9,7 +9,6 @@ import IBoard from "../../common/interfaces/IBoard";
 import { ChangeEvent, KeyboardEvent } from 'react';
 import { validateTitle } from "../../common/utils/functions";
 import AddModal from "../../components/AddModal/AddModal";
-import { stringify } from "querystring";
 
 
 type propsType = {
@@ -211,7 +210,7 @@ class Board extends React.Component<propsType, stateType> {
                     updateTitle={() => this.updateListTitle(item.id, item.position)}
                     newCardIsValide={this.state.newCardIsValide} 
                     updateNewCardName={this.updateNewCardName}
-                    addNewCard={(position) => this.addNewCard(item.id, position)}
+                    addNewCard={() => this.addNewCard(item.id, item.cards ? (Object.values(item.cards).length + 1).toString() : "1")}
                     handleCardChange={this.editCard} editedCardTitle={this.state.editedCardTitle}
                     updateCardTitle={(cardId, position) => this.updateCardTitle(cardId, position, item.id)}
                     />
