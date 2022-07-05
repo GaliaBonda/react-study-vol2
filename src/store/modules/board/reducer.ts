@@ -74,7 +74,7 @@ export default function reducer(state = initialState, action: { type: string, pa
             
             updatedLists[targetListIndex].cards = {
                 ...updatedLists[targetListIndex].cards,
-                '1': action.payload
+                [action.payload.id]: action.payload
             };
             // console.log(updatedLists);
             // const updatedList = state.board.lists.map
@@ -83,7 +83,27 @@ export default function reducer(state = initialState, action: { type: string, pa
                     ...state.board,
                     lists: updatedLists,
                 },
-    };
+            };
+        case 'EDIT_CARD':
+            
+            const editedLists = [...state.board.lists];
+            const targetIndex = editedLists.findIndex((item) => {
+                return item.id == action.payload.list_id;
+            });
+            
+            
+            editedLists[targetIndex].cards = {
+                ...editedLists[targetIndex].cards,
+                [action.payload.id]: action.payload
+            };
+            // console.log(updatedLists);
+            // const updatedList = state.board.lists.map
+            return {
+                board: {
+                    ...state.board,
+                    lists: editedLists,
+                },
+        };
         default: {
         return { ...state };
     }

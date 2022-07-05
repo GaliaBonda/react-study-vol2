@@ -152,7 +152,7 @@ export const editList =
         ///board/<id>/card/<id>
 
     // await api.delete(`/board/${id}/list/${1656600851486}`);
-    await dispatch({ type: 'EDIT_CARD', payload: { ...card} });
+    await dispatch({ type: 'EDIT_CARD', payload: { ...card, id: cardId} });
     } catch (e) {
 console.error(e);
       dispatch({ type: 'ERROR_ACTION_TYPE'});
