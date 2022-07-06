@@ -113,8 +113,11 @@ export const editList =
         };
 
         let data: { result: string, id: number } = await api.post(`/board/${id}/card`, card);
-        // await api.delete(`/board/${id}/card/${1656919663849}`);
-        // await api.delete(`/board/${id}/card/${1656919800154}`);
+        // await api.delete(`/board/${id}/card/${1657089868822}`);
+        // await api.delete(`/board/${id}/card/${1657089237229}`);
+        // await api.delete(`/board/${id}/card/${1657089259814}`);
+        // await api.delete(`/board/${id}/card/${1657093858780}`);
+        
         
         await dispatch({ type: 'POST_CARD', payload: { ...card, id: data.id.toString()} });
     } catch (e) {
@@ -151,7 +154,7 @@ export const editList =
         await api.put(`/board/${id}/card/${cardId}`, card);
         ///board/<id>/card/<id>
 
-    // await api.delete(`/board/${id}/list/${1656600851486}`);
+    
     await dispatch({ type: 'EDIT_CARD', payload: { ...card, id: cardId} });
     } catch (e) {
 console.error(e);

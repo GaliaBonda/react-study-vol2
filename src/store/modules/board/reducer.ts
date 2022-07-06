@@ -1,3 +1,6 @@
+import ICard from "../../../common/interfaces/ICard";
+import IList from "../../../common/interfaces/IList";
+
 const initialState = {
     board: {
         id: 0,
@@ -36,8 +39,15 @@ const initialState = {
 export default function reducer(state = initialState, action: { type: string, payload?: any }) {
     switch (action.type) {
         case 'GET_BOARD':
+            // console.log(action.payload);
+            
+            let listsWithArrCards: IList[] = Object.values(action.payload.lists).map(
+                (value: any) => {
+                    
+                return {...value, cards: Object.values(value.cards).sort((a: any, b: any) => a.position - b.position)};
+            });
             return {
-                board: {...action.payload, lists: Object.values(action.payload.lists)},
+                board: {...action.payload, lists: listsWithArrCards.sort((a: any, b: any) => a.position - b.position)},
             };
         case 'EDIT_BOARD':
             return {
@@ -66,16 +76,17 @@ export default function reducer(state = initialState, action: { type: string, pa
     };
         case 'POST_CARD':
             
-            const updatedLists = [...state.board.lists];
+            let updatedLists = [...state.board.lists];
             const targetListIndex = updatedLists.findIndex((item) => {
                 return item.id == action.payload.list_id;
             });
             
+            updatedLists[targetListIndex].cards.push({...action.payload}); 
             
-            updatedLists[targetListIndex].cards = {
-                ...updatedLists[targetListIndex].cards,
-                [action.payload.id]: action.payload
-            };
+            // updatedLists[targetListIndex].cards = {
+            //     ...updatedLists[targetListIndex].cards,
+            //     [action.payload.id]: action.payload
+            // };
             // console.log(updatedLists);
             // const updatedList = state.board.lists.map
             return {
@@ -86,16 +97,26 @@ export default function reducer(state = initialState, action: { type: string, pa
             };
         case 'EDIT_CARD':
             
-            const editedLists = [...state.board.lists];
+            let editedLists = [...state.board.lists];
             const targetIndex = editedLists.findIndex((item) => {
                 return item.id == action.payload.list_id;
             });
+            editedLists[targetIndex].cards = editedLists[targetIndex].cards.map((item) => {
+                if (item.id == action.payload.id) {
+                    return {...item, ...action.payload};
+                } else {
+                    return item;
+                }
+            });
             
+            // editedLists[targetIndex].cards = {
+            //     ...editedLists[targetIndex].cards,
+            //     [action.payload.id]: {
+            //         ...editedLists[targetIndex].cards[action.payload.id],
+            //         ...action.payload
+            //     }
+            // };
             
-            editedLists[targetIndex].cards = {
-                ...editedLists[targetIndex].cards,
-                [action.payload.id]: action.payload
-            };
             // console.log(updatedLists);
             // const updatedList = state.board.lists.map
             return {

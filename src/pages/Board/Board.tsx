@@ -191,7 +191,7 @@ class Board extends React.Component<propsType, stateType> {
         this.setState({editedCardTitleValid: validateTitle(e.target.value)});
     }
 
-    async updateCardTitle(cardId: string, position: string, listId: string) {
+    async updateCardTitle(cardId: string, listId: string) {
         if (this.state.editedCardTitleValid) {
         await this.props.editCard(this.props.board.id, cardId, listId, this.state.editedCardTitle);
         await this.props.getBoard(this.props.board.id);
@@ -205,14 +205,14 @@ class Board extends React.Component<propsType, stateType> {
         if (this.props.board.lists && JSON.stringify(this.props.board.lists) !== '{}') {
             lists = this.props.board.lists.map((item, index) => {
                 return <List title={item.title} id={item.id} handleChange={this.editListTitle}
-                    cards={item.cards ? Object.values(item.cards) : []}
-                    key={item.id ? item.id : index} position={item.position} 
+                    cards={item.cards ? item.cards : []}
+                    key={item.id} position={item.position} 
                     updateTitle={() => this.updateListTitle(item.id, item.position)}
                     newCardIsValide={this.state.newCardIsValide} 
                     updateNewCardName={this.updateNewCardName}
                     addNewCard={() => this.addNewCard(item.id, item.cards ? (Object.values(item.cards).length + 1).toString() : "1")}
                     handleCardChange={this.editCard} editedCardTitle={this.state.editedCardTitle}
-                    updateCardTitle={(cardId, position) => this.updateCardTitle(cardId, position, item.id)}
+                    updateCardTitle={(cardId) => this.updateCardTitle(cardId, item.id)}
                     />
             });
         } else {
