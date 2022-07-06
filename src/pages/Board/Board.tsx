@@ -82,20 +82,20 @@ class Board extends React.Component<propsType, stateType> {
         this.updateCardTitle = this.updateCardTitle.bind(this);
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         let boardId = this.props.params.boardID || "";
-        this.props.getBoard(boardId);
+        await this.props.getBoard(boardId);
 
     }
 
-    componentDidUpdate() {
-        if (this.textInput.current) {
-            this.textInput.current.focus();
-        }
-        // this.editBoard(this.props.board.id, this.state.editedBoardTitle);
-        // await this.props.getBoard(this.props.board.id);
+    // componentDidUpdate() {
+    //     if (this.textInput.current) {
+    //         this.textInput.current.focus();
+    //     }
+    //     // this.editBoard(this.props.board.id, this.state.editedBoardTitle);
+    //     // await this.props.getBoard(this.props.board.id);
 
-    }
+    // }
 
     async editBoard(id: string, name: string) {
         if (this.state.editedBoardIsValide) {
@@ -226,7 +226,7 @@ class Board extends React.Component<propsType, stateType> {
             <div className="board-container">
                 <h1 className="board__title" onClick={this.editOn} onBlur={this.editOff}>
                     {!this.state.editOn ? <span className="board__title-span">{board.title}</span> :
-                        <input className="board__input board__title-span" value={this.state.editedBoardTitle} onChange={this.handleChange} onKeyUp={this.handleKeyUp} ref={this.textInput} />}
+                        <input autoFocus className="board__input board__title-span" value={this.state.editedBoardTitle} onChange={this.handleChange} onKeyUp={this.handleKeyUp} ref={this.textInput} />}
                     <span className="board__title-id"> {board.id}</span>
                 </h1>
                 {(this.state.warningText.length > 0) && <p className="warning board__warning">{this.state.warningText}</p>}

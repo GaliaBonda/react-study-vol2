@@ -1,9 +1,9 @@
-import React, { ChangeEvent } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import { Link } from 'react-router-dom';
 import IBoard from "../../common/interfaces/IBoard";
 import { validateTitle } from "../../common/utils/functions";
-import { getBoards, postBoard } from "../../store/modules/boards/actions";
+import { autorize, getBoards, postBoard } from "../../store/modules/boards/actions";
 import AddModal from "../../components/AddModal/AddModal";
 import Board from "./components/Board/Board";
 import './home.scss';
@@ -12,6 +12,7 @@ type propsType = {
   boards: IBoard[];
   getBoards: () => Promise<void>;
   postBoard: (title: string) => Promise<void>;
+  autorize: () => Promise<void>;
 
 }
 
@@ -23,6 +24,7 @@ type stateType = {
   addModalShown: boolean;
   newBoardTitle: string;
   newBoardIsValide: boolean;
+  autorizated: boolean;
 };
 
 // let testboards = [
@@ -41,15 +43,20 @@ class Home extends React.Component<propsType, stateType> {
         addModalShown: false,
         newBoardTitle: '',
         newBoardIsValide: false,
+        autorizated: false,
       };
       this.addBoard = this.addBoard.bind(this);
       this.closeAddModal = this.closeAddModal.bind(this);
       this.addNewBoard = this.addNewBoard.bind(this);
       this.updateNewBoardName = this.updateNewBoardName.bind(this);
+      this.autorize = this.autorize.bind(this);
   }
-  async componentDidMount() {
-    await this.props.getBoards();
-  }
+  // async componentDidMount() {
+  //   // if (this.state.autorizated) {
+  //   //   await this.props.getBoards();
+  //   // }
+    
+  // }
   addBoard() {
       this.setState({addModalShown: true});
     
@@ -73,6 +80,12 @@ class Home extends React.Component<propsType, stateType> {
     
   }
 
+  async autorize() {
+    this.setState({autorizated: true});
+    await this.props.autorize();
+    await this.props.getBoards();
+  }
+
   
   render() {
     let boards =  this.props.boards.map((item, index) => {
@@ -89,13 +102,7 @@ class Home extends React.Component<propsType, stateType> {
     
     return (
         <div className="home">
-            <nav className="home__nav nav">
-               <ul className="nav__list">
-                <li className="nav__list-item">
-                    <Link className="home__link" to="/board">Board</Link>
-                </li>
-            </ul> 
-            </nav>
+            <button className="btn home__btn autorization-btn" onClick={this.autorize}>Test Autorization</button>
             <ul className="home__list boards">
                 {boards}
             </ul>
@@ -113,4 +120,4 @@ class Home extends React.Component<propsType, stateType> {
 const mapStateToProps = (state: stateType) => ({
   ...state.boards,
 });
-export default connect(mapStateToProps, { getBoards, postBoard })(Home);
+export default connect(mapStateToProps, { getBoards, postBoard, autorize })(Home);

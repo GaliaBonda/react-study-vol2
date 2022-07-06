@@ -7,17 +7,17 @@ import IBoard from "../../../common/interfaces/IBoard";
 
 export const getBoard = (id: string) => async (dispatch: Dispatch) => {
   try {
-    let res: AxiosResponse & { accessToken: string, refreshToken: string } = await api.post('/login', {
-      email: "test@gmail.com", password: "testpass"
-    });
-    // console.log(res);
-    // await api.post('/refresh', {refreshToken: res.refreshToken}) 
-    api.interceptors.request.use(function (config) {
-      const token = res.accessToken;
-      if (config.headers) config.headers.Authorization = 'Bearer ' + token;
+    // let res: AxiosResponse & { accessToken: string, refreshToken: string } = await api.post('/login', {
+    //   email: "test@gmail.com", password: "testpass"
+    // });
+    // // console.log(res);
+    // // await api.post('/refresh', {refreshToken: res.refreshToken}) 
+    // api.interceptors.request.use(function (config) {
+    //   const token = res.accessToken;
+    //   if (config.headers) config.headers.Authorization = 'Bearer ' + token;
 
-      return config;
-    });
+    //   return config;
+    // });
     const data: { board: IBoard } = await api.get(`/board/${id}`);
     // console.log(data);
 

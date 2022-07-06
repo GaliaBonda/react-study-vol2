@@ -35,12 +35,13 @@ input:focus {
 }
 
 .home {
-    padding: 4em 2em;
+    padding: 8em 2em;
     position: relative;
     &__list {
         display: flex;
         flex-wrap: wrap;
         gap: 2em;
+        justify-content: space-around;
 
     }
     &__link {
@@ -59,4 +60,13 @@ input:focus {
     &__board-link:hover {
         color: rgb(46, 45, 45);
     }
+}
+
+.autorization-btn {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50%;
+
 }
