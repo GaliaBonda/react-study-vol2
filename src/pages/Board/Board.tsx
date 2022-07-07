@@ -45,7 +45,6 @@ type stateType = {
 // let boardId:string;
 
 class Board extends React.Component<propsType, stateType> {
-    textInput: React.RefObject<HTMLInputElement>;
     constructor(props: propsType) {
         super(props);
         this.state = {
@@ -63,7 +62,6 @@ class Board extends React.Component<propsType, stateType> {
             editedCardTitle: '',
             editedCardTitleValid: true,
         };
-        this.textInput = React.createRef();
 
         this.editOn = this.editOn.bind(this);
         this.editOff = this.editOff.bind(this);
@@ -226,7 +224,7 @@ class Board extends React.Component<propsType, stateType> {
             <div className="board-container">
                 <h1 className="board__title" onClick={this.editOn} onBlur={this.editOff}>
                     {!this.state.editOn ? <span className="board__title-span">{board.title}</span> :
-                        <input autoFocus className="board__input board__title-span" value={this.state.editedBoardTitle} onChange={this.handleChange} onKeyUp={this.handleKeyUp} ref={this.textInput} />}
+                        <input autoFocus className="board__input board__title-span" value={this.state.editedBoardTitle} onChange={this.handleChange} onKeyUp={this.handleKeyUp} />}
                     <span className="board__title-id"> {board.id}</span>
                 </h1>
                 {(this.state.warningText.length > 0) && <p className="warning board__warning">{this.state.warningText}</p>}

@@ -44,15 +44,15 @@ export const postList =
   (id: string, title: string, position: string) =>
     async (dispatch: Dispatch): Promise<void> => {
       try {
-        let res: AxiosResponse & { accessToken: string } = await api.post('/login', {
-          email: "test@gmail.com", password: "testpass"
-        });
-        api.interceptors.request.use(function (config) {
-          const token = res.accessToken;
-          if (config.headers) config.headers.Authorization = 'Bearer ' + token;
+        // let res: AxiosResponse & { accessToken: string } = await api.post('/login', {
+        //   email: "test@gmail.com", password: "testpass"
+        // });
+        // api.interceptors.request.use(function (config) {
+        //   const token = res.accessToken;
+        //   if (config.headers) config.headers.Authorization = 'Bearer ' + token;
 
-          return config;
-        });
+        //   return config;
+        // });
         const list = {
           title: title,
           position: position,
@@ -70,15 +70,15 @@ export const editList =
   (boardId: string, listId: string, title: string, position: string) =>
     async (dispatch: Dispatch): Promise<void> => {
       try {
-        let res: AxiosResponse & { accessToken: string } = await api.post('/login', {
-          email: "test@gmail.com", password: "testpass"
-        });
-        api.interceptors.request.use(function (config) {
-          const token = res.accessToken;
-          if (config.headers) config.headers.Authorization = 'Bearer ' + token;
+        // let res: AxiosResponse & { accessToken: string } = await api.post('/login', {
+        //   email: "test@gmail.com", password: "testpass"
+        // });
+        // api.interceptors.request.use(function (config) {
+        //   const token = res.accessToken;
+        //   if (config.headers) config.headers.Authorization = 'Bearer ' + token;
 
-          return config;
-        });
+        //   return config;
+        // });
         const list = {
           title: title,
           position: position,
@@ -97,15 +97,15 @@ export const editList =
   (id: string, listId: string, title: string, position: string) =>
   async (dispatch: Dispatch): Promise<void> => {
       try {
-        let res: AxiosResponse & {accessToken: string} = await api.post('/login', {
-            email: "test@gmail.com", password: "testpass"
-        });
-        api.interceptors.request.use(function (config) {
-            const token = res.accessToken;
-            if (config.headers) config.headers.Authorization =  'Bearer ' + token;
+        // let res: AxiosResponse & {accessToken: string} = await api.post('/login', {
+        //     email: "test@gmail.com", password: "testpass"
+        // });
+        // api.interceptors.request.use(function (config) {
+        //     const token = res.accessToken;
+        //     if (config.headers) config.headers.Authorization =  'Bearer ' + token;
         
-            return config;
-        });
+        //     return config;
+        // });
         const card = {
           title: title,
           position: position,
@@ -129,15 +129,15 @@ export const editList =
   (id: string, cardId: string, listId: string, title: string) =>
   async (dispatch: Dispatch): Promise<void> => {
       try {
-        let res: AxiosResponse & {accessToken: string} = await api.post('/login', {
-            email: "test@gmail.com", password: "testpass"
-        });
-        api.interceptors.request.use(function (config) {
-            const token = res.accessToken;
-            if (config.headers) config.headers.Authorization =  'Bearer ' + token;
+        // let res: AxiosResponse & {accessToken: string} = await api.post('/login', {
+        //     email: "test@gmail.com", password: "testpass"
+        // });
+        // api.interceptors.request.use(function (config) {
+        //     const token = res.accessToken;
+        //     if (config.headers) config.headers.Authorization =  'Bearer ' + token;
         
-            return config;
-        });
+        //     return config;
+        // });
         // console.log('boardid:' + id, 'cardid:' + cardId, title, 'listid:' + listId);
         
       const card = {
