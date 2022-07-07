@@ -1,6 +1,5 @@
 // import api from '/src/api';
 // import config from '/src/common/constants/api';
-import { AxiosResponse } from "axios";
 import { Dispatch } from "redux";
 import api from "../../../api";
 import IBoard from "../../../common/interfaces/IBoard";
@@ -19,7 +18,7 @@ export const getBoard = (id: string) => async (dispatch: Dispatch) => {
     //   return config;
     // });
     const data: { board: IBoard } = await api.get(`/board/${id}`);
-    // console.log(data);
+    //console.log(data);
 
     dispatch({ type: 'GET_BOARD', payload: { ...data, id: id } });
   } catch (e) {
