@@ -78,23 +78,14 @@ class Board extends React.Component<propsType, stateType> {
         this.addNewCard = this.addNewCard.bind(this);
         this.editCard = this.editCard.bind(this);
         this.updateCardTitle = this.updateCardTitle.bind(this);
-        this.test = this.test.bind(this);
     }
 
      componentDidMount() {
         let boardId = this.props.params.boardID || "";
         this.props.getBoard(boardId);
-        
     }
 
-    componentWillUnmount() {
-        this.test();
-    }
-
-    test() {
-        console.log('ffff');
-        
-    }
+    
     // componentDidUpdate() {
     //     if (this.textInput.current) {
     //         this.textInput.current.focus();
