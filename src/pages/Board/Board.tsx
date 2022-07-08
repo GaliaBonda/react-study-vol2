@@ -78,6 +78,7 @@ class Board extends React.Component<propsType, stateType> {
         this.addNewCard = this.addNewCard.bind(this);
         this.editCard = this.editCard.bind(this);
         this.updateCardTitle = this.updateCardTitle.bind(this);
+        this.test = this.test.bind(this);
     }
 
      componentDidMount() {
@@ -86,6 +87,14 @@ class Board extends React.Component<propsType, stateType> {
         
     }
 
+    componentWillUnmount() {
+        this.test();
+    }
+
+    test() {
+        console.log('ffff');
+        
+    }
     // componentDidUpdate() {
     //     if (this.textInput.current) {
     //         this.textInput.current.focus();
@@ -246,5 +255,6 @@ const mapStateToProps = (state: stateType) => ({
     ...state.board,
 });
 
-export default withRouter(connect(mapStateToProps, { getBoard, editBoard, postList, editList, postCard, editCard })(Board));
+export default connect(mapStateToProps, { getBoard, editBoard, postList, editList, postCard, editCard })(withRouter(Board));
+// export default withRouter(connect(mapStateToProps, { getBoard, editBoard, postList, editList, postCard, editCard })(Board));
 // export default connect(mapStateToProps, { getBoard })(Board);

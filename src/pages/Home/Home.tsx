@@ -9,7 +9,7 @@ import Board from "./components/Board/Board";
 import './home.scss';
 
 type propsType = {
-  boards: IBoard[];
+  boards?: IBoard[];
   getBoards: () => Promise<void>;
   postBoard: (title: string) => Promise<void>;
   autorize: () => Promise<void>;
@@ -20,7 +20,7 @@ type propsType = {
 //     boards: IBoard[];
 // };
 type stateType = {
-  boards: IBoard[];
+  boards?: IBoard[];
   addModalShown: boolean;
   newBoardTitle: string;
   newBoardIsValide: boolean;
@@ -39,7 +39,7 @@ class Home extends React.Component<propsType, stateType> {
     constructor(props: propsType) {
         super(props);
       this.state = {
-        boards: this.props.boards,
+        boards: [],
         addModalShown: false,
         newBoardTitle: '',
         newBoardIsValide: false,
@@ -51,12 +51,13 @@ class Home extends React.Component<propsType, stateType> {
       this.updateNewBoardName = this.updateNewBoardName.bind(this);
       this.autorize = this.autorize.bind(this);
   }
-  // async componentDidMount() {
-  //   // if (this.state.autorizated) {
-  //   //   await this.props.getBoards();
-  //   // }
+   componentDidMount() {
+     this.props.getBoards();
+    // if (this.state.autorizated) {
+    //   await this.props.getBoards();
+    // }
     
-  // }
+  }
   addBoard() {
       this.setState({addModalShown: true});
     
@@ -88,11 +89,12 @@ class Home extends React.Component<propsType, stateType> {
 
   
   render() {
+    if (!this.props.boards) return null;
     let boards =  this.props.boards.map((item, index) => {
         return (
             <Link className="home__board-link"
             to={`/board/${item.id}`}
-            key={index}
+            key={item.id}
           >
             <Board title={item.title} />
           </Link>
