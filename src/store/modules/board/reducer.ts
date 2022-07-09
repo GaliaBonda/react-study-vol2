@@ -39,11 +39,8 @@ const initialState = {
 export default function reducer(state = initialState, action: { type: string, payload?: any }) {
     switch (action.type) {
         case 'GET_BOARD':
-            // console.log(action.payload);
-            
             let listsWithArrCards: IList[] = Object.values(action.payload.lists).map(
-                (value: any) => {
-                    
+                (value: any) => {                  
                 return {...value, cards: Object.values(value.cards).sort((a: any, b: any) => a.position - b.position)};
             });
             return {

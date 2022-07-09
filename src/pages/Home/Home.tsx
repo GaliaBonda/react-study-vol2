@@ -7,9 +7,11 @@ import { autorize, getBoards, postBoard } from "../../store/modules/boards/actio
 import AddModal from "../../components/AddModal/AddModal";
 import Board from "./components/Board/Board";
 import './home.scss';
+import ProgressBar from "../../components/ProgressBar/ProgressBar";
 
 type propsType = {
   boards?: IBoard[];
+  progressBar: boolean;
   getBoards: () => Promise<void>;
   postBoard: (title: string) => Promise<void>;
   autorize: () => Promise<void>;
@@ -20,6 +22,7 @@ type propsType = {
 //     boards: IBoard[];
 // };
 type stateType = {
+  common: { progressBar: boolean };
   boards?: IBoard[];
   addModalShown: boolean;
   newBoardTitle: string;
@@ -39,6 +42,7 @@ class Home extends React.Component<propsType, stateType> {
     constructor(props: propsType) {
         super(props);
       this.state = {
+        common: {progressBar: false},
         boards: [],
         addModalShown: false,
         newBoardTitle: '',
@@ -105,7 +109,8 @@ class Home extends React.Component<propsType, stateType> {
     return (
         <div className="home">
             <button className="btn home__btn autorization-btn" onClick={this.autorize}>Test Autorization</button>
-            <ul className="home__list boards">
+        {this.props.progressBar && <ProgressBar title="Boards processing..."/>}    
+        <ul className="home__list boards">
                 {boards}
             </ul>
         <button className="btn home__btn" onClick={this.addBoard}>Add board</button>
@@ -120,6 +125,6 @@ class Home extends React.Component<propsType, stateType> {
 }
 
 const mapStateToProps = (state: stateType) => ({
-  ...state.boards,
+  ...state.boards, progressBar: state.common.progressBar,
 });
 export default connect(mapStateToProps, { getBoards, postBoard, autorize })(Home);
