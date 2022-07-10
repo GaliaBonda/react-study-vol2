@@ -1,6 +1,10 @@
 .progress-bar {
-    &__inner {
+    &__outer {
+        border: 2px solid black;
         width: 100%;
+    }
+    &__inner {
+        width: 0%;
         height: 2em;
         background-color: black;
     }

@@ -109,7 +109,8 @@ class Home extends React.Component<propsType, stateType> {
     return (
         <div className="home">
             <button className="btn home__btn autorization-btn" onClick={this.autorize}>Test Autorization</button>
-        {this.props.progressBar && <ProgressBar title="Boards processing..."/>}    
+        {/* {this.props.progressBar && <ProgressBar title="Boards processing..."/>}     */}
+        {true && <ProgressBar title="Boards processing..."/>}    
         <ul className="home__list boards">
                 {boards}
             </ul>
