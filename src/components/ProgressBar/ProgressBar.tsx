@@ -15,13 +15,14 @@ export default function ProgressBar(props: PropsType) {
     
     
     useEffect(() => {
+        
         const interval = setInterval(() => {
             setDynamicWidth((val) => {
                 let newVal = val + 1;
                 if (newVal > 99) clearInterval(interval);
                 return newVal;
             });
-        }, props.active ? 500 : 10);
+        }, 20);
     }, []);
 
     useEffect(() => {
