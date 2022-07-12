@@ -19,20 +19,24 @@ export default function ProgressBar(props: PropsType) {
     
   useEffect(() => {
         api.interceptors.request.use((config) => {
-    if (!config.url?.includes('login')) {
-        store.dispatch({type: 'PROGRESS_BAR_ON'});
+            // setDynamicWidth(0);
+            
+    if (config.url?.includes('login')) {
+        return config;
         }
+        store.dispatch({type: 'PROGRESS_BAR_ON'});
+        
         const interval = setInterval(() => {
             setDynamicWidth((val) => {
                 let newVal = val + 1;
-                console.log('request');
+                console.log('request', val);
                 
-                if (newVal > 99) {
+                if (newVal > 99 || !props.active) {
                     clearInterval(interval);
                 }
                 return newVal;
             });
-        }, 50);
+        }, 20);
         
         return config;
     });
@@ -51,25 +55,26 @@ export default function ProgressBar(props: PropsType) {
         // return new Promise(resolve =>
         //     setTimeout(() => resolve(res), 6000))
         // });
-      
+      const interval = setInterval(() => {
+            setDynamicWidth((val) => {
+                let newVal = val + 1;
+                // console.log('response');
+                // console.log(val);
+                
+                if (newVal > 99) {
+                    clearInterval(interval);
+                }
+                return newVal;
+            });
+        }, 1);
     if (dynamicWidth <= 100) {
-        return new Promise(resolve => {
-            let timeout = setTimeout(() => {
-        //     const interval = setInterval(() => {
-        //     setDynamicWidth((val) => {
-        //         let newVal = val + 1;
-        //         if (newVal > 99) {
-        //             clearInterval(interval);
-        //         }
-        //         return newVal;
-        //     });
-        // }, 20);
-        if (dynamicWidth > 99) {
-            clearTimeout(timeout);
-        }
-        return resolve(res);
-    }, 5000);
         
+        return new Promise(resolve => {
+            setTimeout(() => {
+        
+                store.dispatch({ type: 'PROGRESS_BAR_OFF' });
+        return resolve(res);
+    }, 100 - dynamicWidth + 500);
         });
         
     
@@ -77,7 +82,8 @@ export default function ProgressBar(props: PropsType) {
     store.dispatch({ type: 'PROGRESS_BAR_OFF' });
     
     return res;
-    }); 
+    });
+     
    }, []);
 
 //    useEffect(() => {
