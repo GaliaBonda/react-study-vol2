@@ -1,11 +1,21 @@
 // import api from '/src/api';
 // import config from '/src/common/constants/api';
+import { AxiosResponse } from "axios";
 import { Dispatch } from "redux";
 import api from "../../../api";
 import IBoard from "../../../common/interfaces/IBoard";
 
 export const getBoard = (id: string) => async (dispatch: Dispatch) => {
   try {
+    let res: AxiosResponse & {accessToken: string} = await api.post('/login', {
+      email: "test@gmail.com", password: "testpass"
+  });
+  api.interceptors.request.use(function (config) {
+      const token = res.accessToken;
+      if (config.headers) config.headers.Authorization =  'Bearer ' + token;
+  
+      return config;
+  });
     const data: { board: IBoard } = await api.get(`/board/${id}`);
     dispatch({ type: 'GET_BOARD', payload: { ...data, id: id } });
   } catch (e) {
