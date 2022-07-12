@@ -23,6 +23,7 @@ const instance = axios.create({
 //   return res.data;
 // });
 instance.interceptors.response.use((res) => {
+  
   return res.data;
 });
 
