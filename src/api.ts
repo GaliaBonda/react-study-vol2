@@ -10,16 +10,19 @@ const instance = axios.create({
   },
 });
 
-instance.interceptors.request.use((config) => {
-  if (!config.url?.includes('login')) {
-store.dispatch({type: 'PROGRESS_BAR_ON'});
-  }
+// instance.interceptors.request.use((config) => {
+//   if (!config.url?.includes('login')) {
+// store.dispatch({type: 'PROGRESS_BAR_ON'});
+//   }
   
   
-  return config;
-});
+//   return config;
+// });
+// instance.interceptors.response.use((res) => {
+//   store.dispatch({type: 'PROGRESS_BAR_OFF'});
+//   return res.data;
+// });
 instance.interceptors.response.use((res) => {
-  store.dispatch({type: 'PROGRESS_BAR_OFF'});
   return res.data;
 });
 

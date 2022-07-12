@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import api from '../../api';
+import store from '../../store/store';
 import './progressbar.scss'
 
 type PropsType = {
@@ -11,27 +13,56 @@ type PropsType = {
 export default function ProgressBar(props: PropsType) {
     const [dynamicWidth, setDynamicWidth] = useState(0);
     const [barIsVisible, setBarVisible] = useState(false);
+    
 
     
     
-    useEffect(() => {
+  useEffect(() => {
+        api.interceptors.request.use((config) => {
+    if (!config.url?.includes('login')) {
+        store.dispatch({type: 'PROGRESS_BAR_ON'});
+        }
         
-        const interval = setInterval(() => {
+        
+        return config;
+    });
+    api.interceptors.response.use((res) => {
+    if (dynamicWidth <= 100) {
+    const interval = setInterval(() => {
             setDynamicWidth((val) => {
                 let newVal = val + 1;
-                if (newVal > 99) clearInterval(interval);
+                if (newVal > 99) {
+                    clearInterval(interval);
+                }
                 return newVal;
             });
         }, 20);
-    }, []);
-
-    useEffect(() => {
-        if (props.active && dynamicWidth <= 100) {
-            setBarVisible(true);
-        } else {
-            setBarVisible(false);
-        }
+    }
+    store.dispatch({ type: 'PROGRESS_BAR_OFF' });
+    return res.data;
     });
+        
+   }, []);
+
+   useEffect(() => {
+        const interval = setInterval(() => {
+            setDynamicWidth((val) => {
+                let newVal = val + 1;
+                if (newVal > 99) {
+                    clearInterval(interval);
+                }
+                return newVal;
+            });
+        }, 50);
+   });
+
+    // useEffect(() => {
+    //     if (props.active && dynamicWidth <= 100) {
+    //         setBarVisible(true);
+    //     } else {
+    //         setBarVisible(false);
+    //     }
+    // });
 
     // if (!barIsVisible) return null;
     return (<div className="progress-bar">
