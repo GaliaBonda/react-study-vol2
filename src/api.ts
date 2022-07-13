@@ -22,6 +22,19 @@ const instance = axios.create({
 //   store.dispatch({type: 'PROGRESS_BAR_OFF'});
 //   return res.data;
 // });
+instance.interceptors.request.use(function (config) {
+  if (config.url?.includes('login')) return config;
+  const token = store.getState().common.token;
+  console.log(token);
+  
+        if (config.headers) config.headers.Authorization =  'Bearer ' + token;
+    
+        return config;
+    }, () => {
+      console.log('error');
+      
+});
+    
 instance.interceptors.response.use((res) => {
   
   return res.data;

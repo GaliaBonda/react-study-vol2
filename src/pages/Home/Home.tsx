@@ -3,11 +3,12 @@ import { connect } from "react-redux";
 import { Link } from 'react-router-dom';
 import IBoard from "../../common/interfaces/IBoard";
 import { validateTitle } from "../../common/utils/functions";
-import { autorize, getBoards, postBoard } from "../../store/modules/boards/actions";
+import { getBoards, postBoard } from "../../store/modules/boards/actions";
 import AddModal from "../../components/AddModal/AddModal";
 import Board from "./components/Board/Board";
 import './home.scss';
 import ProgressBar from "../../components/ProgressBar/ProgressBar";
+import { autorize } from "../../store/modules/common/actions";
 
 type propsType = {
   boards?: IBoard[];
@@ -22,7 +23,7 @@ type propsType = {
 //     boards: IBoard[];
 // };
 type stateType = {
-  common: { progressBar: boolean };
+  common: { progressBar: boolean, token: string };
   boards?: IBoard[];
   addModalShown: boolean;
   newBoardTitle: string;
@@ -42,7 +43,7 @@ class Home extends React.Component<propsType, stateType> {
     constructor(props: propsType) {
         super(props);
       this.state = {
-        common: {progressBar: false},
+        common: {progressBar: false, token: ''},
         boards: [],
         addModalShown: false,
         newBoardTitle: '',
@@ -53,9 +54,10 @@ class Home extends React.Component<propsType, stateType> {
       this.closeAddModal = this.closeAddModal.bind(this);
       this.addNewBoard = this.addNewBoard.bind(this);
       this.updateNewBoardName = this.updateNewBoardName.bind(this);
-      this.autorize = this.autorize.bind(this);
+      // this.autorize = this.autorize.bind(this);
   }
-   componentDidMount() {
+  componentDidMount() {
+    this.props.autorize();
      this.props.getBoards();
     // if (this.state.autorizated) {
     //   await this.props.getBoards();
@@ -85,11 +87,11 @@ class Home extends React.Component<propsType, stateType> {
     
   }
 
-  async autorize() {
-    this.setState({autorizated: true});
-    await this.props.autorize();
-    await this.props.getBoards();
-  }
+  // async autorize() {
+  //   this.setState({autorizated: true});
+  //   await this.props.autorize();
+  //   await this.props.getBoards();
+  // }
 
   
   render() {
@@ -108,7 +110,7 @@ class Home extends React.Component<propsType, stateType> {
     
     return (
         <div className="home">
-            <button className="btn home__btn autorization-btn" onClick={this.autorize}>Test Autorization</button>
+            {/* <button className="btn home__btn autorization-btn" onClick={this.autorize}>Test Autorization</button> */}
         {/* {this.props.progressBar && <ProgressBar title="Boards processing..."/>}     */}
         <ProgressBar title="Boards processing..." active={this.props.progressBar} />  
         <ul className="home__list boards">
