@@ -24,8 +24,8 @@ const instance = axios.create({
 // });
 instance.interceptors.request.use(function (config) {
   if (config.url?.includes('login')) return config;
-  const token = store.getState().common.token;
-  console.log(token);
+  const token = store.getState().common.common.token;
+  // console.log(token);
   
         if (config.headers) config.headers.Authorization =  'Bearer ' + token;
     

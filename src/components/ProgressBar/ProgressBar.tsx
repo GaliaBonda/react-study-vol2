@@ -47,6 +47,8 @@ export default function ProgressBar(props: PropsType) {
     });
 
     api.interceptors.response.use((res) => {
+        console.log(res);
+        
         if ('accessToken' in res) return res;
         
         
