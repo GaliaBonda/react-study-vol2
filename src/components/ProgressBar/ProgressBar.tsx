@@ -1,7 +1,5 @@
-import { AxiosResponse } from 'axios';
 import React, { useEffect, useState } from 'react';
 import api from '../../api';
-import store from '../../store/store';
 import './progressbar.scss'
 
 type PropsType = {
@@ -16,25 +14,28 @@ export default function ProgressBar(props: PropsType) {
 
 
 
-
+//must be launching to many times
     useEffect(() => {
-        // api.interceptors.request.use((config) => {
-        //     if (config.url?.includes('login')) {
-        //         return config;
-        //     }
-        //     store.dispatch({ type: 'PROGRESS_BAR_ON' });
-        //     const interval = setInterval(() => {
-        //         console.log(interval);
-        //         setDynamicWidth((val) => {
-        //             let newVal = val + 1;
-        //             if (newVal > 99 || !props.active) {
-        //                 clearInterval(interval);
-        //             }
-        //             return newVal;
-        //         });
-        //     }, 20);
-        //     return config;
-        // });
+        api.interceptors.request.use((config) => {
+            if (config.method !== 'get') return config;
+            console.log(config);
+            return config;
+            
+            // if (config.url?.includes('login')) {
+            //     return config;
+            // }
+            
+            // const interval = setInterval(() => {
+            //     console.log(interval);
+            //     setDynamicWidth((val) => {
+            //         let newVal = val + 1;
+            //         if (newVal > 99 || !props.active) {
+            //             clearInterval(interval);
+            //         }
+            //         return newVal;
+            //     });
+            // }, 20);
+        });
 
         // api.interceptors.response.use((res) => {
         //     console.log(res);
