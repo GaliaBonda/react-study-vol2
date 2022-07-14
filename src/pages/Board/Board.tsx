@@ -84,10 +84,10 @@ class Board extends React.Component<propsType, stateType> {
         this.updateCardTitle = this.updateCardTitle.bind(this);
     }
 
-     componentDidMount() {
+    async componentDidMount() {
         let boardId = this.props.params.boardID || "";
         
-        this.props.getBoard(boardId);
+        await this.props.getBoard(boardId);
     }
 
     

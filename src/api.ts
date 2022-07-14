@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { api } from './common/constants';
 import store from './store/store';
 
@@ -22,8 +22,13 @@ const instance = axios.create({
 //   store.dispatch({type: 'PROGRESS_BAR_OFF'});
 //   return res.data;
 // });
-instance.interceptors.request.use(function (config) {
+instance.interceptors.request.use(async function (config) {
   if (config.url?.includes('login')) return config;
+  console.log('interceptor login');
+  let res: AxiosResponse & {accessToken: string} = await instance.post('/login', {
+        email: "test@gmail.com", password: "testpass"
+    });
+      store.dispatch({type: 'AUTHORIZE', payload: res.accessToken}); 
   const token = store.getState().common.common.token;
   // console.log(token);
   

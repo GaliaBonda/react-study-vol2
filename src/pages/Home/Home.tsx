@@ -57,7 +57,7 @@ class Home extends React.Component<propsType, stateType> {
       // this.autorize = this.autorize.bind(this);
   }
   async componentDidMount() {
-    await this.props.autorize();
+    // await this.props.autorize();
     await this.props.getBoards();
     // if (this.state.autorizated) {
     //   await this.props.getBoards();
