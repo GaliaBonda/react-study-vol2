@@ -18,7 +18,6 @@ type propsType = {
     // lists: Array<any>;
     // id: number | null;
     params: Readonly<Params<string>>;
-    progressBar: boolean;
     getBoard: (id: string) => Promise<void>;
     editBoard: (id: string, name: string) => Promise<void>;
     postList: (id: string, name: string, position: string) => Promise<void>;
@@ -29,7 +28,6 @@ type propsType = {
 
 type stateType = {
     board?: IBoard;
-    common: { progressBar: boolean };
     editOn: boolean;
     editedBoardTitle: string,
     editedBoardIsValide: boolean,
@@ -64,7 +62,6 @@ class Board extends React.Component<propsType, stateType> {
             newCardIsValide: false,
             editedCardTitle: '',
             editedCardTitleValid: true,
-            common: {progressBar: false},
         };
 
         this.editOn = this.editOn.bind(this);
@@ -226,7 +223,7 @@ class Board extends React.Component<propsType, stateType> {
 
         return (<div className="board">
             <Link className="board__link" to="/">Home</Link>
-            <ProgressBar title="Board processing..." active={this.props.progressBar} />
+            <ProgressBar title="Board processing..." />
             <div className="board-container">
                 <h1 className="board__title" onClick={this.editOn} onBlur={this.editOff}>
                     {!this.state.editOn ? <span className="board__title-span">{board.title}</span> :
@@ -249,7 +246,7 @@ class Board extends React.Component<propsType, stateType> {
 
 // export default withRouter(Board);
 const mapStateToProps = (state: stateType) => ({
-    ...state.board, progressBar: state.common.progressBar,
+    ...state.board,
 });
 
 export default connect(mapStateToProps, { getBoard, editBoard, postList, editList, postCard, editCard })(withRouter(Board));

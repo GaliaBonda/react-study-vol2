@@ -6,7 +6,6 @@ import './progressbar.scss'
 
 type PropsType = {
     title: string;
-    active: boolean;
 }
 
 

@@ -8,14 +8,11 @@ import AddModal from "../../components/AddModal/AddModal";
 import Board from "./components/Board/Board";
 import './home.scss';
 import ProgressBar from "../../components/ProgressBar/ProgressBar";
-import { autorize } from "../../store/modules/common/actions";
 
 type propsType = {
   boards?: IBoard[];
-  progressBar: boolean;
   getBoards: () => Promise<void>;
   postBoard: (title: string) => Promise<void>;
-  autorize: () => Promise<void>;
 
 }
 
@@ -23,12 +20,10 @@ type propsType = {
 //     boards: IBoard[];
 // };
 type stateType = {
-  common: { progressBar: boolean, token: string };
   boards?: IBoard[];
   addModalShown: boolean;
   newBoardTitle: string;
   newBoardIsValide: boolean;
-  autorizated: boolean;
 };
 
 // let testboards = [
@@ -43,24 +38,19 @@ class Home extends React.Component<propsType, stateType> {
     constructor(props: propsType) {
         super(props);
       this.state = {
-        common: {progressBar: false, token: ''},
         boards: [],
         addModalShown: false,
         newBoardTitle: '',
         newBoardIsValide: false,
-        autorizated: false,
       };
       this.addBoard = this.addBoard.bind(this);
       this.closeAddModal = this.closeAddModal.bind(this);
       this.addNewBoard = this.addNewBoard.bind(this);
       this.updateNewBoardName = this.updateNewBoardName.bind(this);
-      // this.autorize = this.autorize.bind(this);
   }
   async componentDidMount() {
     // await this.props.autorize();
     await this.props.getBoards();
-    // if (this.state.autorizated) {
-    //   await this.props.getBoards();
     // }
     
   }
@@ -112,7 +102,7 @@ class Home extends React.Component<propsType, stateType> {
         <div className="home">
             {/* <button className="btn home__btn autorization-btn" onClick={this.autorize}>Test Autorization</button> */}
         {/* {this.props.progressBar && <ProgressBar title="Boards processing..."/>}     */}
-        <ProgressBar title="Boards processing..." active={this.props.progressBar} />  
+        <ProgressBar title="Boards processing..."/>  
         <ul className="home__list boards">
                 {boards}
             </ul>
@@ -128,6 +118,6 @@ class Home extends React.Component<propsType, stateType> {
 }
 
 const mapStateToProps = (state: stateType) => ({
-  ...state.boards, progressBar: state.common.progressBar,
+  ...state.boards,
 });
-export default connect(mapStateToProps, { getBoards, postBoard, autorize })(Home);
+export default connect(mapStateToProps, { getBoards, postBoard })(Home);
