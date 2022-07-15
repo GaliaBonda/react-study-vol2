@@ -14,10 +14,13 @@ export default function ProgressBar(props: PropsType) {
 
 
 
-//must be launching to many times
+
     useEffect(() => {
+        console.log('progress bar use effect');
+        
         api.interceptors.request.use((config) => {
             if (config.method !== 'get') return config;
+            console.log('Progress bar interceptor');
             console.log(config);
             return config;
             
