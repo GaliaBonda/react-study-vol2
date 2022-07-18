@@ -14,9 +14,6 @@ import ProgressBar from "../../components/ProgressBar/ProgressBar";
 
 type propsType = {
     board: IBoard;
-    // title: string;
-    // lists: Array<any>;
-    // id: number | null;
     params: Readonly<Params<string>>;
     getBoard: (id: string) => Promise<void>;
     editBoard: (id: string, name: string) => Promise<void>;
@@ -43,9 +40,8 @@ type stateType = {
     editedCardTitleValid: boolean,
 };
 
-// let boardId:string;
-
 class Board extends React.Component<propsType, stateType> {
+
     constructor(props: propsType) {
         super(props);
         this.state = {
@@ -82,20 +78,11 @@ class Board extends React.Component<propsType, stateType> {
     }
 
     async componentDidMount() {
+
         let boardId = this.props.params.boardID || "";
-        
+
         await this.props.getBoard(boardId);
     }
-
-    
-    // componentDidUpdate() {
-    //     if (this.textInput.current) {
-    //         this.textInput.current.focus();
-    //     }
-    //     // this.editBoard(this.props.board.id, this.state.editedBoardTitle);
-    //     // await this.props.getBoard(this.props.board.id);
-
-    // }
 
     async editBoard(id: string, name: string) {
         if (this.state.editedBoardIsValide) {
@@ -135,7 +122,6 @@ class Board extends React.Component<propsType, stateType> {
 
     showAddListModal() {
         this.setState({ addListModalShown: true });
-        // this.props.postList(this.props.board.id, this.state.listTitle);
 
     }
 
@@ -160,8 +146,6 @@ class Board extends React.Component<propsType, stateType> {
     editListTitle(e: ChangeEvent<HTMLInputElement>) {
         this.setState({ editedListTitle: e.target.value });
         this.setState({ editedListTitleValid: validateTitle(e.target.value) });
-        // console.log(id, position);
-        // await this.props.editList (this.props.board.id, id, e.target.value, position);
 
     }
     async updateListTitle(id: string, position: string) {
@@ -172,29 +156,27 @@ class Board extends React.Component<propsType, stateType> {
 
     }
     updateNewCardName(title: string) {
-        this.setState({newCardName: title});
-        this.setState({newCardIsValide: validateTitle(title)});
+        this.setState({ newCardName: title });
+        this.setState({ newCardIsValide: validateTitle(title) });
     }
 
     async addNewCard(id: string, position: string) {
         if (this.state.newCardIsValide) {
             await this.props.postCard(this.props.board.id, id, this.state.newCardName, position);
             await this.props.getBoard(this.props.board.id);
-            // id: string, listId: string, title: string, position: string
-            // console.log(this.state.newCardName, id, position);
-            
+
         }
     }
 
     editCard(e: ChangeEvent<HTMLInputElement>) {
         this.setState({ editedCardTitle: e.target.value });
-        this.setState({editedCardTitleValid: validateTitle(e.target.value)});
+        this.setState({ editedCardTitleValid: validateTitle(e.target.value) });
     }
 
     async updateCardTitle(cardId: string, listId: string) {
         if (this.state.editedCardTitleValid) {
-        await this.props.editCard(this.props.board.id, cardId, listId, this.state.editedCardTitle);
-        await this.props.getBoard(this.props.board.id);
+            await this.props.editCard(this.props.board.id, cardId, listId, this.state.editedCardTitle);
+            await this.props.getBoard(this.props.board.id);
         }
 
     }
@@ -206,20 +188,19 @@ class Board extends React.Component<propsType, stateType> {
             lists = this.props.board.lists.map((item, index) => {
                 return <List title={item.title} id={item.id} handleChange={this.editListTitle}
                     cards={item.cards ? item.cards : []}
-                    key={item.id} position={item.position} 
+                    key={item.id} position={item.position}
                     updateTitle={() => this.updateListTitle(item.id, item.position)}
-                    newCardIsValide={this.state.newCardIsValide} 
+                    newCardIsValide={this.state.newCardIsValide}
                     updateNewCardName={this.updateNewCardName}
                     addNewCard={() => this.addNewCard(item.id, item.cards ? (Object.values(item.cards).length + 1).toString() : "1")}
                     handleCardChange={this.editCard} editedCardTitle={this.state.editedCardTitle}
                     updateCardTitle={(cardId) => this.updateCardTitle(cardId, item.id)}
-                    />
+                />
             });
         } else {
             lists = [];
         }
         let { board } = this.props;
-        // console.log(board);
 
         return (<div className="board">
             <Link className="board__link" to="/">Home</Link>
@@ -243,12 +224,8 @@ class Board extends React.Component<propsType, stateType> {
         </div>);
     }
 }
-
-// export default withRouter(Board);
 const mapStateToProps = (state: stateType) => ({
     ...state.board,
 });
 
 export default connect(mapStateToProps, { getBoard, editBoard, postList, editList, postCard, editCard })(withRouter(Board));
-// export default withRouter(connect(mapStateToProps, { getBoard, editBoard, postList, editList, postCard, editCard })(Board));
-// export default connect(mapStateToProps, { getBoard })(Board);

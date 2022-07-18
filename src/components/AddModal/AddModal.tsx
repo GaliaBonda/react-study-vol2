@@ -10,12 +10,8 @@ type propsType = {
     handleChange: (value: string) => void;
 };
 
-// type stateType = {
-//     shown: boolean;
-// }
 
 export default function AddModal(props: propsType) {
-    // const [shown, setShown] = useState(true);
     function handleClick() {
         props.handleClose();
     }
@@ -34,17 +30,17 @@ export default function AddModal(props: propsType) {
             <div className="add-modal__main">
                 <h2 className="add-modal__title">{props.title}</h2>
                 <label className="add-modal__label">
-                    <input type="text" className="add-modal__input" placeholder='Type name' onChange={handleChange}/>
+                    <input type="text" className="add-modal__input" placeholder='Type name' onChange={handleChange} />
                 </label>
                 <div className="add-modal__btns">
                     <button className="add-modal__btn btn" onClick={handleClick}>Cancel</button>
-                    { props.isValide &&
-                    <button className="add-modal__btn btn" onClick={handleOkClick}>Ok</button>
+                    {props.isValide &&
+                        <button className="add-modal__btn btn" onClick={handleOkClick}>Ok</button>
                     }
-                    { !props.isValide &&
-                    <button className="add-modal__btn btn nonactive">Ok</button>
+                    {!props.isValide &&
+                        <button className="add-modal__btn btn nonactive">Ok</button>
                     }
-                    
+
                 </div>
 
             </div>

@@ -1,7 +1,3 @@
-// const initialState = {
-//     boards: [] as IBoard[]
-// };
-
 const initialState = {
     boards: [
         { id: 1, title: "покупки" },
