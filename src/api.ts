@@ -22,6 +22,8 @@ const instance = axios.create({
 //   return res.data;
 // });
 instance.interceptors.request.use(async function (config) {
+  console.log('api interceptor');
+  
   if (config.url?.includes('login')) return config;
 
   if (!store.getState().common.common.token.accestoken) {

@@ -17,28 +17,34 @@ export default function ProgressBar(props: PropsType) {
 
     useEffect(() => {
         console.log('progress bar use effect');
-        
-        api.interceptors.request.use((config) => {
-            if (config.method !== 'get') return config;
-            console.log('Progress bar interceptor');
+
+        let progressInterceptor = api.interceptors.request.use((config) => {
             console.log(config);
             return config;
             
-            // if (config.url?.includes('login')) {
-            //     return config;
-            // }
-            
-            // const interval = setInterval(() => {
-            //     console.log(interval);
-            //     setDynamicWidth((val) => {
-            //         let newVal = val + 1;
-            //         if (newVal > 99 || !props.active) {
-            //             clearInterval(interval);
-            //         }
-            //         return newVal;
-            //     });
-            // }, 20);
         });
+        
+        // api.interceptors.request.use((config) => {
+        //     if (config.method !== 'get') return config;
+        //     console.log('Progress bar interceptor');
+        //     console.log(config);
+        //     return config;
+            
+        //     // if (config.url?.includes('login')) {
+        //     //     return config;
+        //     // }
+            
+        //     // const interval = setInterval(() => {
+        //     //     console.log(interval);
+        //     //     setDynamicWidth((val) => {
+        //     //         let newVal = val + 1;
+        //     //         if (newVal > 99 || !props.active) {
+        //     //             clearInterval(interval);
+        //     //         }
+        //     //         return newVal;
+        //     //     });
+        //     // }, 20);
+        // });
 
         // api.interceptors.response.use((res) => {
         //     console.log(res);
@@ -63,7 +69,9 @@ export default function ProgressBar(props: PropsType) {
         //     store.dispatch({ type: 'PROGRESS_BAR_OFF' });
         //     return res;
         // });
-
+        return () => {
+            api.interceptors.request.eject(progressInterceptor);
+        }
     }, []);
 
 
