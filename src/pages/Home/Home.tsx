@@ -11,7 +11,7 @@ import ProgressBar from "../../components/ProgressBar/ProgressBar";
 import { ThunkDispatch } from "redux-thunk";
 import { Dispatch } from "redux";
 
-type propsType = {
+interface Props {
   boards?: IBoard[];
   getBoards: () => Promise<void>;
   postBoard: (title: string) => Promise<void>;
@@ -21,23 +21,32 @@ type propsType = {
 // type stateType = {
 //     boards: IBoard[];
 // };
-type stateType = {
+interface State {
   boards?: IBoard[];
   addModalShown: boolean;
   newBoardTitle: string;
   newBoardIsValide: boolean;
 };
 
-// let testboards = [
-//   { id: 1, title: "покупки" },
-//   { id: 2, title: "подготовка к свадьбе" },
-//   { id: 3, title: "разработка интернет-магазина" },
-//   { id: 4, title: "курс по продвижению в соцсетях" }
-// ];
+// function Home (props: Props) {
 
+//   return (<div className="home">
+//   {/* <button className="btn home__btn autorization-btn" onClick={this.autorize}>Test Autorization</button> */}
+//   {/* {this.props.progressBar && <ProgressBar title="Boards processing..."/>}     */}
+//   <ProgressBar title="Boards processing..." />
+//   <ul className="home__list boards">
+//     {boards}
+//   </ul>
+//   <button className="btn home__btn" onClick={this.addBoard}>Add board</button>
+//   <AddModal title="Add new board" isValide={this.state.newBoardIsValide} shown={this.state.addModalShown}
+//     handleClose={this.closeAddModal}
+//     handleChange={this.updateNewBoardName}
+//     handleOk={this.addNewBoard} />
+// </div>);
+// }
 
-class Home extends React.Component<propsType, stateType> {
-  constructor(props: propsType) {
+class Home extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props);
     this.state = {
       boards: [],
@@ -113,13 +122,12 @@ class Home extends React.Component<propsType, stateType> {
           handleClose={this.closeAddModal}
           handleChange={this.updateNewBoardName}
           handleOk={this.addNewBoard} />
-
       </div>
     );
   }
 }
 
-const mapStateToProps = (state: stateType) => ({
+const mapStateToProps = (state: State) => ({
   ...state.boards,
 });
 

@@ -12,9 +12,6 @@ export default function ProgressBar(props: PropsType) {
     const [dynamicWidth, setDynamicWidth] = useState(0);
     const [barIsVisible, setBarVisible] = useState(false);
 
-
-
-
     useEffect(() => {
         console.log('progress bar use effect');
 
