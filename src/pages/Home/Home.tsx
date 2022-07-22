@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Link } from 'react-router-dom';
 import IBoard from "../../common/interfaces/IBoard";
@@ -28,104 +28,145 @@ interface State {
   newBoardIsValide: boolean;
 };
 
-// function Home (props: Props) {
+function Home(props: Props) {
+  const { boards, getBoards, postBoard } = props;
+  const [addModalShown, setAddModalShown] = useState(false);
+  const [newBoardTitle, setNewBoardTItle] = useState('');
+  const [newBoardValide, setNewBoardValide] = useState(false);
 
-//   return (<div className="home">
-//   {/* <button className="btn home__btn autorization-btn" onClick={this.autorize}>Test Autorization</button> */}
-//   {/* {this.props.progressBar && <ProgressBar title="Boards processing..."/>}     */}
-//   <ProgressBar title="Boards processing..." />
-//   <ul className="home__list boards">
-//     {boards}
-//   </ul>
-//   <button className="btn home__btn" onClick={this.addBoard}>Add board</button>
-//   <AddModal title="Add new board" isValide={this.state.newBoardIsValide} shown={this.state.addModalShown}
-//     handleClose={this.closeAddModal}
-//     handleChange={this.updateNewBoardName}
-//     handleOk={this.addNewBoard} />
-// </div>);
-// }
 
-class Home extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      boards: [],
-      addModalShown: false,
-      newBoardTitle: '',
-      newBoardIsValide: false,
-    };
-    this.addBoard = this.addBoard.bind(this);
-    this.closeAddModal = this.closeAddModal.bind(this);
-    this.addNewBoard = this.addNewBoard.bind(this);
-    this.updateNewBoardName = this.updateNewBoardName.bind(this);
-  }
-  async componentDidMount() {
-    // await this.props.autorize();
-    await this.props.getBoards();
-    // }
+  useEffect(() => {
+    getBoards()
+  }, []);
+
+  const addBoard = () => {
+    setAddModalShown(true);
 
   }
-  addBoard() {
-    this.setState({ addModalShown: true });
-
-  }
-  updateNewBoardName(name: string) {
-    this.setState({ newBoardTitle: name });
-    this.setState({ newBoardIsValide: validateTitle(name) });
+  const updateNewBoardName = (name: string) => {
+    setNewBoardTItle(name);
+    setNewBoardValide(validateTitle(name));
 
   }
 
 
-  async addNewBoard() {
-    this.setState({ addModalShown: false });
-    await this.props.postBoard(this.state.newBoardTitle);
-    await this.props.getBoards();
+  const addNewBoard = async () => {
+    setAddModalShown(false);
+    await postBoard(newBoardTitle);
+    await getBoards();
 
 
   }
-  closeAddModal() {
-    this.setState({ addModalShown: false });
-
+  const closeAddModal = () => {
+    setAddModalShown(false);
   }
 
-  // async autorize() {
-  //   this.setState({autorizated: true});
-  //   await this.props.autorize();
-  //   await this.props.getBoards();
-  // }
+  return (<div className="home">
+    {/* <button className="btn home__btn autorization-btn" onClick={this.autorize}>Test Autorization</button> */}
+    {/* {this.props.progressBar && <ProgressBar title="Boards processing..."/>}     */}
+    <ProgressBar title="Boards processing..." />
+    <ul className="home__list boards">
+      {boards?.map((item, index) => {
+        return (
+          <Link className="home__board-link"
+            to={`/board/${item.id}`}
+            key={item.id}
+          >
+            <Board title={item.title} />
+          </Link>
 
-
-  render() {
-    if (!this.props.boards) return null;
-    let boards = this.props.boards.map((item, index) => {
-      return (
-        <Link className="home__board-link"
-          to={`/board/${item.id}`}
-          key={item.id}
-        >
-          <Board title={item.title} />
-        </Link>
-
-      );
-    });
-
-    return (
-      <div className="home">
-        {/* <button className="btn home__btn autorization-btn" onClick={this.autorize}>Test Autorization</button> */}
-        {/* {this.props.progressBar && <ProgressBar title="Boards processing..."/>}     */}
-        <ProgressBar title="Boards processing..." />
-        <ul className="home__list boards">
-          {boards}
-        </ul>
-        <button className="btn home__btn" onClick={this.addBoard}>Add board</button>
-        <AddModal title="Add new board" isValide={this.state.newBoardIsValide} shown={this.state.addModalShown}
-          handleClose={this.closeAddModal}
-          handleChange={this.updateNewBoardName}
-          handleOk={this.addNewBoard} />
-      </div>
-    );
-  }
+        );
+      })}
+    </ul>
+    <button className="btn home__btn" onClick={addBoard}>Add board</button>
+    <AddModal title="Add new board" isValide={newBoardValide} shown={addModalShown}
+      handleClose={closeAddModal}
+      handleChange={updateNewBoardName}
+      handleOk={addNewBoard} />
+  </div>);
 }
+
+// class Home extends React.Component<Props, State> {
+//   constructor(props: Props) {
+//     super(props);
+//     this.state = {
+//       boards: [],
+//       addModalShown: false,
+//       newBoardTitle: '',
+//       newBoardIsValide: false,
+//     };
+//     this.addBoard = this.addBoard.bind(this);
+//     this.closeAddModal = this.closeAddModal.bind(this);
+//     this.addNewBoard = this.addNewBoard.bind(this);
+//     this.updateNewBoardName = this.updateNewBoardName.bind(this);
+//   }
+//   async componentDidMount() {
+//     // await this.props.autorize();
+//     await this.props.getBoards();
+//     // }
+
+//   }
+//   addBoard() {
+//     this.setState({ addModalShown: true });
+
+//   }
+//   updateNewBoardName(name: string) {
+//     this.setState({ newBoardTitle: name });
+//     this.setState({ newBoardIsValide: validateTitle(name) });
+
+//   }
+
+
+//   async addNewBoard() {
+//     this.setState({ addModalShown: false });
+//     await this.props.postBoard(this.state.newBoardTitle);
+//     await this.props.getBoards();
+
+
+//   }
+//   closeAddModal() {
+//     this.setState({ addModalShown: false });
+
+//   }
+
+//   // async autorize() {
+//   //   this.setState({autorizated: true});
+//   //   await this.props.autorize();
+//   //   await this.props.getBoards();
+//   // }
+
+
+//   render() {
+//     if (!this.props.boards) return null;
+//     let boards = this.props.boards.map((item, index) => {
+//       return (
+//         <Link className="home__board-link"
+//           to={`/board/${item.id}`}
+//           key={item.id}
+//         >
+//           <Board title={item.title} />
+//         </Link>
+
+//       );
+//     });
+
+//     return (
+//       <div className="home">
+//         {/* <button className="btn home__btn autorization-btn" onClick={this.autorize}>Test Autorization</button> */}
+//         {/* {this.props.progressBar && <ProgressBar title="Boards processing..."/>}     */}
+//         <ProgressBar title="Boards processing..." />
+//         <ul className="home__list boards">
+//           {boards}
+//         </ul>
+//         <button className="btn home__btn" onClick={this.addBoard}>Add board</button>
+//         <AddModal title="Add new board" isValide={this.state.newBoardIsValide} shown={this.state.addModalShown}
+//           handleClose={this.closeAddModal}
+//           handleChange={this.updateNewBoardName}
+//           handleOk={this.addNewBoard} />
+//       </div>
+//     );
+//   }
+// }
 
 const mapStateToProps = (state: State) => ({
   ...state.boards,

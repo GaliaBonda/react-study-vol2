@@ -26,19 +26,6 @@ export const thunkPostBoard = (title: string) => async (dispatch: Dispatch): Pro
   }
 };
 
-export const postBoard =
-  (title: string) =>
-    async (dispatch: Dispatch): Promise<void> => {
-      try {
-        const board = {
-          title: title,
-        };
 
-        await api.post(`/board`, board);
-        await dispatch({ type: 'POST_BOARD', payload: { ...board } });
-      } catch (e) {
-        dispatch({ type: 'ERROR_ACTION_TYPE' });
-      }
-    };
 
 
