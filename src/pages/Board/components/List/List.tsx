@@ -1,7 +1,8 @@
 import React, { ChangeEvent, KeyboardEvent, useState } from "react";
 import { useDispatch } from "react-redux";
-import { AnyAction, Dispatch } from "redux";
-import { ThunkAction } from "redux-thunk";
+import { Action, AnyAction, Dispatch } from "redux";
+import { ThunkAction, ThunkDispatch } from "redux-thunk";
+import IBoard from "../../../../common/interfaces/IBoard";
 import ICard from "../../../../common/interfaces/ICard";
 import AddModal from "../../../../components/AddModal/AddModal";
 import { editList, thunkEditList } from "../../../../store/modules/board/actions";
@@ -34,8 +35,8 @@ export default function List(props: propsType) {
 
     const dispatch = useDispatch();
     type AppDispatch = typeof dispatch;
-    const useAppDispatch: () => AppDispatch = useDispatch
-    const appDispatch = useAppDispatch();
+    const useAppDispatch: () => AppDispatch = useDispatch;
+    const appDispatch:ThunkDispatch<IBoard, void, Action> = useAppDispatch();
 
     let editOn = () => {
         setEditMode(true);
@@ -45,7 +46,7 @@ export default function List(props: propsType) {
         setEditMode(false);
 
         appDispatch(thunkEditList(props.boardId, props.id, inputValue, props.position));
-        props.updateTitle();
+        // props.updateTitle();
     }
     let handleKeyDown = (e: KeyboardEvent) => {
         if (e.key === 'Enter') {

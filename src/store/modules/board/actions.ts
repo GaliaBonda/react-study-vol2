@@ -44,7 +44,7 @@ export const postList =
     };
 
 export const thunkEditList =
-  (boardId: string, listId: string, title: string, position: string): ThunkAction<void, IBoard, unknown, AnyAction> =>
+  (boardId: string, listId: string, title: string, position: string) =>
     async (dispatch: Dispatch): Promise<void> => {
       try {
         const list = {
