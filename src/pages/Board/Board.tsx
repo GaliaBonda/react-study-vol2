@@ -18,7 +18,7 @@ interface Props {
     editBoard: (id: string, name: string) => Promise<void>;
     postList: (id: string, name: string, position: string) => Promise<void>;
     editList: (boardId: string, listId: string, title: string, position: string) => Promise<void>;
-    postCard: (id: string, listId: string, title: string, position: string) => Promise<void>;
+    // postCard: (id: string, listId: string, title: string, position: string) => Promise<void>;
     editCard: (id: string, cardId: string, listId: string, title: string) => Promise<void>;
 };
 
@@ -117,25 +117,18 @@ function Board(props: Props) {
         setEditedListTitleValid(validateTitle(e.target.value));
 
     }
-    async function updateListTitle(id: string, position: string) {
-        if (editedListTitleValid) {
-            await props.editList(props.board.id, id, editedListTitle, position);
-
-        }
-
-    }
     function updateNewCardName(title: string) {
         setNewCardName(title);
         setCardIsValide(validateTitle(title));
     }
 
-    async function addNewCard(id: string, position: string) {
-        if (newCardIsValide) {
-            await props.postCard(props.board.id, id, newCardName, position);
-            await props.getBoard(props.board.id);
+    // async function addNewCard(id: string, position: string) {
+    //     if (newCardIsValide) {
+    //         await props.postCard(props.board.id, id, newCardName, position);
+    //         await props.getBoard(props.board.id);
 
-        }
-    }
+    //     }
+    // }
 
     function editCard(e: ChangeEvent<HTMLInputElement>) {
         setEditedCardTitle(e.target.value);
@@ -164,10 +157,9 @@ function Board(props: Props) {
             return <List title={item.title} id={item.id} boardId={boardId} handleChange={editListTitle}
                 cards={item.cards ? item.cards : []}
                 key={item.id} position={item.position}
-                updateTitle={() => updateListTitle(item.id, item.position)}
                 newCardIsValide={newCardIsValide}
                 updateNewCardName={updateNewCardName}
-                addNewCard={() => addNewCard(item.id, item.cards ? (Object.values(item.cards).length + 1).toString() : "1")}
+                // addNewCard={() => addNewCard(item.id, item.cards ? (Object.values(item.cards).length + 1).toString() : "1")}
                 handleCardChange={editCard} editedCardTitle={editedCardTitle}
                 updateCardTitle={(cardId) => updateCardTitle(cardId, item.id)}
             />

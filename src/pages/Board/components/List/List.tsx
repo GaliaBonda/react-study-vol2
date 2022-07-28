@@ -4,8 +4,9 @@ import { Action, AnyAction, Dispatch } from "redux";
 import { ThunkAction, ThunkDispatch } from "redux-thunk";
 import IBoard from "../../../../common/interfaces/IBoard";
 import ICard from "../../../../common/interfaces/ICard";
+import { validateTitle } from "../../../../common/utils/functions";
 import AddModal from "../../../../components/AddModal/AddModal";
-import { editList, thunkEditList } from "../../../../store/modules/board/actions";
+import { editList, postCard, thunkEditList } from "../../../../store/modules/board/actions";
 import Card from "../Card/Card";
 import './list.scss'
 
@@ -18,25 +19,26 @@ type propsType = {
     boardId: string;
     handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
     handleCardChange: (e: ChangeEvent<HTMLInputElement>) => void;
-    updateTitle: () => void;
+
 
     newCardIsValide: boolean;
     updateNewCardName: (value: string) => void;
-    addNewCard: (position: string) => void;
+    // addNewCard: (position: string) => void;
     updateCardTitle: (cardId: string) => void;
     editedCardTitle: string;
 };
 export default function List(props: propsType) {
     const [editModeOn, setEditMode] = useState(false);
     const [inputValue, setInputValue] = useState('');
+    const [titleValid, setTitleValid] = useState(true);
     const [addCardModalShown, setModalShown] = useState(false);
-    // const [newCardTitle, setNewCardTitle] = useState('');
-    // const [newCardIsValide, setCardValide] = useState(false);
+    const [newCardTitle, setNewCardTitle] = useState('');
+    const [newCardValid, setNewCardValid] = useState(false);
 
     const dispatch = useDispatch();
     type AppDispatch = typeof dispatch;
     const useAppDispatch: () => AppDispatch = useDispatch;
-    const appDispatch:ThunkDispatch<IBoard, void, Action> = useAppDispatch();
+    const appDispatch: ThunkDispatch<IBoard, void, Action> = useAppDispatch();
 
     let editOn = () => {
         setEditMode(true);
@@ -44,17 +46,23 @@ export default function List(props: propsType) {
     }
     let editOff = () => {
         setEditMode(false);
-
-        appDispatch(thunkEditList(props.boardId, props.id, inputValue, props.position));
+        setTitleValid(validateTitle(inputValue));
+        appDispatch(thunkEditList(props.boardId, props.id, inputValue, props.position, titleValid));
         // props.updateTitle();
     }
     let handleKeyDown = (e: KeyboardEvent) => {
         if (e.key === 'Enter') {
             e.preventDefault();
             editOff();
-
         }
     }
+
+    let updateNewCardName = (title: string) => {
+        setNewCardTitle(title);
+        setNewCardValid(validateTitle(title));
+    }
+
+
     let handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setInputValue(e.target.value);
 
@@ -68,8 +76,10 @@ export default function List(props: propsType) {
     }
     let handleOk = () => {
         setModalShown(false);
-        props.addNewCard(props.position);
+        appDispatch(postCard(props.boardId, props.id, newCardTitle, newCardValid, (props.cards.length + 1).toString()));
+        // props.addNewCard(props.position);
     }
+
     const handleCardChange = (e: ChangeEvent<HTMLInputElement>) => {
         props.handleCardChange(e);
     };
@@ -92,11 +102,16 @@ export default function List(props: propsType) {
         {editModeOn && <input autoFocus className="list__title list__input" type="text" value={inputValue}
             onBlur={editOff} onKeyDown={handleKeyDown}
             onChange={handleChange} />}
-        <ul className="list__list">{cards}</ul>
+        <ul className="list__list">
+            {props.cards.map((item) => {
+                return <Card title={item.title} key={item.id} position={item.position} handleCardChange={handleCardChange}
+                    editedCardTitle={props.editedCardTitle} updateCardTitle={() => updateCardTitle(item.id)} />
+            })}
+        </ul>
         <button className="list__btn" onClick={handleClick}>+</button>
         <AddModal title="Add new card" shown={addCardModalShown} isValide={props.newCardIsValide}
             handleClose={closeAddModal}
-            handleChange={props.updateNewCardName}
+            handleChange={updateNewCardName}
             handleOk={handleOk} />
     </li>)
 }

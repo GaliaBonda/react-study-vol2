@@ -44,14 +44,14 @@ export const postList =
     };
 
 export const thunkEditList =
-  (boardId: string, listId: string, title: string, position: string) =>
+  (boardId: string, listId: string, title: string, position: string, valid: boolean) =>
     async (dispatch: Dispatch): Promise<void> => {
       try {
+        if (!valid) return;
         const list = {
           title: title,
           position: position,
         };
-
         await api.put(`/board/${boardId}/list/${listId}`, list);
         await dispatch({ type: 'EDIT_LIST', payload: { ...list } });
       } catch (e) {
@@ -77,7 +77,7 @@ export const editList =
     };
 
 export const postCard =
-  (id: string, listId: string, title: string, position: string) =>
+  (id: string, listId: string, title: string, valid: boolean, position: string) =>
     async (dispatch: Dispatch): Promise<void> => {
       try {
         const card = {
@@ -99,6 +99,7 @@ export const postCard =
         dispatch({ type: 'ERROR_ACTION_TYPE' });
       }
     };
+
 export const editCard =
   (id: string, cardId: string, listId: string, title: string) =>
     async (dispatch: Dispatch): Promise<void> => {
