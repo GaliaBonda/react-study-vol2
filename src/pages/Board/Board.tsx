@@ -150,18 +150,18 @@ function Board(props: Props) {
 
     }
 
-    let params = useParams();
-
+    const params = useParams();
+    const boardId = params.boardID || "";
     useEffect(() => {
 
-        const boardId = params.boardID || "";
+
         props.getBoard(boardId);
     }, []);
 
     let lists: JSX.Element[];
     if (props.board.lists && JSON.stringify(props.board.lists) !== '{}') {
         lists = props.board.lists.map((item, index) => {
-            return <List title={item.title} id={item.id} handleChange={editListTitle}
+            return <List title={item.title} id={item.id} boardId={boardId} handleChange={editListTitle}
                 cards={item.cards ? item.cards : []}
                 key={item.id} position={item.position}
                 updateTitle={() => updateListTitle(item.id, item.position)}

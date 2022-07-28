@@ -1,5 +1,6 @@
 import { AxiosResponse } from "axios";
-import { Dispatch } from "redux";
+import { AnyAction, Dispatch } from "redux";
+import { ThunkAction } from "redux-thunk";
 import api from "../../../api";
 import IBoard from "../../../common/interfaces/IBoard";
 
@@ -36,6 +37,23 @@ export const postList =
 
         await api.post(`/board/${id}/list`, list);
         await dispatch({ type: 'POST_LIST', payload: { ...list } });
+      } catch (e) {
+        console.error(e);
+        dispatch({ type: 'ERROR_ACTION_TYPE' });
+      }
+    };
+
+export const thunkEditList =
+  (boardId: string, listId: string, title: string, position: string): ThunkAction<void, IBoard, unknown, AnyAction> =>
+    async (dispatch: Dispatch): Promise<void> => {
+      try {
+        const list = {
+          title: title,
+          position: position,
+        };
+
+        await api.put(`/board/${boardId}/list/${listId}`, list);
+        await dispatch({ type: 'EDIT_LIST', payload: { ...list } });
       } catch (e) {
         console.error(e);
         dispatch({ type: 'ERROR_ACTION_TYPE' });

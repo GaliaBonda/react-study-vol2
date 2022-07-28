@@ -1,15 +1,20 @@
 import React, { ChangeEvent, KeyboardEvent, useState } from "react";
+import { useDispatch } from "react-redux";
+import { AnyAction, Dispatch } from "redux";
+import { ThunkAction } from "redux-thunk";
 import ICard from "../../../../common/interfaces/ICard";
 import AddModal from "../../../../components/AddModal/AddModal";
+import { editList, thunkEditList } from "../../../../store/modules/board/actions";
 import Card from "../Card/Card";
 import './list.scss'
 
 type propsType = {
-    
+
     title: string;
     cards: ICard[];
     position: string;
     id: string;
+    boardId: string;
     handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
     handleCardChange: (e: ChangeEvent<HTMLInputElement>) => void;
     updateTitle: () => void;
@@ -26,24 +31,32 @@ export default function List(props: propsType) {
     const [addCardModalShown, setModalShown] = useState(false);
     // const [newCardTitle, setNewCardTitle] = useState('');
     // const [newCardIsValide, setCardValide] = useState(false);
-    
+
+    const dispatch = useDispatch();
+    type AppDispatch = typeof dispatch;
+    const useAppDispatch: () => AppDispatch = useDispatch
+    const appDispatch = useAppDispatch();
+
     let editOn = () => {
         setEditMode(true);
         setInputValue(props.title);
     }
     let editOff = () => {
         setEditMode(false);
+
+        appDispatch(thunkEditList(props.boardId, props.id, inputValue, props.position));
         props.updateTitle();
     }
     let handleKeyDown = (e: KeyboardEvent) => {
         if (e.key === 'Enter') {
             e.preventDefault();
             editOff();
-            
+
         }
     }
     let handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setInputValue(e.target.value);
+
         props.handleChange(e);
     }
     let handleClick = () => {
@@ -62,11 +75,12 @@ export default function List(props: propsType) {
 
     const updateCardTitle = (id: string) => {
         // console.log(id);
-        
+
         props.updateCardTitle(id);
     }
-    
-// console.log(props.cards);
+
+
+    // console.log(props.cards);
 
     let cards = props.cards.map((item) => {
         return <Card title={item.title} key={item.id} position={item.position} handleCardChange={handleCardChange}
@@ -74,16 +88,14 @@ export default function List(props: propsType) {
     });
     return (<li className="list">
         {!editModeOn && <h2 className="list__title" onClick={editOn}>{props.title}</h2>}
-        {editModeOn && <input autoFocus className="list__title list__input" type="text" value={inputValue} 
-        onBlur={editOff} onKeyDown={handleKeyDown}
-        onChange={handleChange} />}
+        {editModeOn && <input autoFocus className="list__title list__input" type="text" value={inputValue}
+            onBlur={editOff} onKeyDown={handleKeyDown}
+            onChange={handleChange} />}
         <ul className="list__list">{cards}</ul>
         <button className="list__btn" onClick={handleClick}>+</button>
         <AddModal title="Add new card" shown={addCardModalShown} isValide={props.newCardIsValide}
-                    handleClose={closeAddModal}
-                    handleChange={props.updateNewCardName}
-                    handleOk={handleOk} />
+            handleClose={closeAddModal}
+            handleChange={props.updateNewCardName}
+            handleOk={handleOk} />
     </li>)
-  }
-  
-  
+}
