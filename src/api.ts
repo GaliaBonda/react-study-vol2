@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import { api } from './common/constants';
 import store from './store/store';
+import { history } from './common/utils/history';
 
 const instance = axios.create({
   baseURL: api.baseURL,
@@ -9,43 +10,26 @@ const instance = axios.create({
   },
 });
 
-// instance.interceptors.request.use((config) => {
-//   if (!config.url?.includes('login')) {
-// store.dispatch({type: 'PROGRESS_BAR_ON'});
-//   }
-
-
-//   return config;
-// });
-// instance.interceptors.response.use((res) => {
-//   store.dispatch({type: 'PROGRESS_BAR_OFF'});
-//   return res.data;
-// });
 instance.interceptors.request.use(async function (config) {
-  console.log('api interceptor');
-
   if (config.url?.includes('login')) return config;
-
-  if (!store.getState().common.token.accestoken) {
-    let res: AxiosResponse & { accessToken: string, refreshToken: string } = await instance.post('/login', {
-      email: "test@gmail.com", password: "testpass"
+  const token = localStorage.getItem('accessToken');
+  if (!token) {
+    // history.push('/auth');
+    let res: { accessToken: string, refreshToken: string } = await instance.post('/login', {
+      email: api.testEmail, password: api.testPassword
     });
-    store.dispatch({ type: 'AUTHORIZE', payload: { accestoken: res.accessToken, refreshtoken: res.refreshToken } });
-
+    localStorage.setItem('accessToken', res.accessToken);
+    localStorage.setItem('refreshToken', res.refreshToken);
   }
-  const token = store.getState().common.token.accestoken;
-  // console.log(token);
-
-  if (config.headers) config.headers.Authorization = 'Bearer ' + token;
+  config.headers = { "Authorization": 'Bearer ' + token }
 
   return config;
 }, () => {
-  console.log('error');
+  console.error('error');
 
 });
 
 instance.interceptors.response.use((res) => {
-
   return res.data;
 }, async function (error) {
 
@@ -53,17 +37,10 @@ instance.interceptors.response.use((res) => {
   if (error.response.status === 401 && !originalRequest.retry) {
     originalRequest.retry = true;
 
-    const refreshedToken: AxiosResponse & { accessToken: string, refreshToken: string } = await instance.post('/refresh', {
-      refreshToken: store.getState().common.token.refreshtoken,
+    const refreshedToken: { accessToken: string, refreshToken: string } = await instance.post('/refresh', {
+      refreshToken: localStorage.getItem('refreshToken'),
     });
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + refreshedToken.accessToken;
-    store.dispatch({
-      type: 'AUTHORIZE', payload: {
-        accestoken: refreshedToken.accessToken,
-        refreshtoken: refreshedToken.refreshToken
-      }
-    });
-
     return instance(originalRequest);
   }
 });

@@ -1,13 +1,17 @@
 import React from 'react';
 
 import './App.scss';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { unstable_HistoryRouter as HistoryRouter, Route, Routes } from 'react-router-dom';
 import Board from './pages/Board/Board';
 import Home from './pages/Home/Home';
+import { history } from './common/utils/history';
+
 
 function App() {
+
+
   return (
-    <BrowserRouter>
+    <HistoryRouter history={history}>
       <Routes>
         <Route path="board">
           <Route path=":boardID" element={<Board />} />
@@ -15,7 +19,7 @@ function App() {
         <Route path="/" element={<Home />}>
         </Route>
       </Routes>
-    </BrowserRouter>
+    </HistoryRouter>
   );
 }
 
