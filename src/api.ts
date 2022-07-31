@@ -16,7 +16,7 @@ instance.interceptors.request.use(async function (config) {
   if (!token) {
     // history.push('/auth');
     let res: { accessToken: string, refreshToken: string } = await instance.post('/login', {
-      email: api.testEmail, password: api.testPassword
+      email: api.testEmail, password: api.testPassword,
     });
     localStorage.setItem('accessToken', res.accessToken);
     localStorage.setItem('refreshToken', res.refreshToken);
