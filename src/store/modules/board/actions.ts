@@ -1,13 +1,12 @@
-import { AxiosResponse } from "axios";
-import { AnyAction, Dispatch } from "redux";
-import { ThunkAction } from "redux-thunk";
+import { Dispatch } from "redux";
 import api from "../../../api";
 import IBoard from "../../../common/interfaces/IBoard";
 import IList from "../../../common/interfaces/IList";
 
-export const getBoard = (id: string) => async (dispatch: Dispatch) => {
+export const thunkGetBoard = (id: string) => async (dispatch: Dispatch) => {
   try {
     const data: IBoard = await api.get(`/board/${id}`);
+
     const lists: IList[] = Object.values(data.lists).map(
       (value: IList) => {
         return { ...value, cards: Object.values(value.cards) };
@@ -19,19 +18,19 @@ export const getBoard = (id: string) => async (dispatch: Dispatch) => {
   }
 }
 
-export const editBoard = (id: string, name: string) => async (dispatch: Dispatch) => {
+export const thunkEditBoard = (id: string, title: string) => async (dispatch: Dispatch) => {
   try {
-    await api.put(`/board/${id}`, { title: name });
+    await api.put(`/board/${id}`, { title });
     // console.log(data);
 
-    await dispatch({ type: 'EDIT_BOARD', payload: { id: id, title: name } });
+    dispatch({ type: 'EDIT_BOARD', payload: { id, title } });
   } catch (e) {
     console.log(e)
     dispatch({ type: 'ERROR_ACTION_TYPE' });
   }
 }
 
-export const postList =
+export const thunkPostList =
   (id: string, title: string, position: string) =>
     async (dispatch: Dispatch): Promise<void> => {
       try {
@@ -64,22 +63,7 @@ export const thunkEditList =
         dispatch({ type: 'ERROR_ACTION_TYPE' });
       }
     };
-export const editList =
-  (boardId: string, listId: string, title: string, position: string) =>
-    async (dispatch: Dispatch): Promise<void> => {
-      try {
-        const list = {
-          title: title,
-          position: position,
-        };
 
-        await api.put(`/board/${boardId}/list/${listId}`, list);
-        await dispatch({ type: 'EDIT_LIST', payload: { ...list } });
-      } catch (e) {
-        console.error(e);
-        dispatch({ type: 'ERROR_ACTION_TYPE' });
-      }
-    };
 
 export const thunkPostCard =
   (id: string, listId: string, title: string, valid: boolean, position: string) =>

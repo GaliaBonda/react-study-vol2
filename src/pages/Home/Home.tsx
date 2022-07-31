@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Link } from 'react-router-dom';
 import IBoard from "../../common/interfaces/IBoard";
-import { validateTitle } from "../../common/utils/functions";
+import { validateTitle } from "../../common/utils/validate";
 import { thunkGetBoards, thunkPostBoard } from "../../store/modules/boards/actions";
 import AddModal from "../../components/AddModal/AddModal";
 import Board from "./components/Board/Board";
@@ -18,9 +18,6 @@ interface Props {
 
 }
 
-// type stateType = {
-//     boards: IBoard[];
-// };
 interface State {
   boards: IBoard[];
   addModalShown: boolean;
@@ -86,9 +83,6 @@ function Home({ boards, getBoards, postBoard }: Props) {
   </div>);
 }
 
-// const mapStateToProps = (state: State) => ({
-//   ...state.boards,
-// });
 const mapStateToProps = (state: State) => {
   return { boards: [...state.boards] }
 };

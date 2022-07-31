@@ -14,60 +14,47 @@ export default function ProgressBar(props: PropsType) {
 
     useEffect(() => {
         // console.log('progress bar use effect');
-
-        let progressInterceptor = api.interceptors.request.use((config) => {
+        let interval: NodeJS.Timer;
+        const progressInterceptor = api.interceptors.request.use((config) => {
+            if (config.method !== 'get') return config;
+            interval = setInterval(() => {
+                setDynamicWidth((val) => {
+                    const newVal = val + 1;
+                    if (newVal > 99) {
+                        clearInterval(interval);
+                    }
+                    return newVal;
+                })
+            });
             // console.log(config);
             return config;
-
+        });
+        let secondInterval: NodeJS.Timer;
+        let timeout: NodeJS.Timeout;
+        const progressEndInterceptor = api.interceptors.response.use((res) => {
+            if ('accessToken' in res) return res;
+            timeout = setTimeout(() => {
+                secondInterval = setInterval(() => {
+                    setDynamicWidth((val) => {
+                        const newVal = val + 1;
+                        if (newVal > 99) {
+                            clearInterval(secondInterval);
+                            clearTimeout(timeout);
+                        }
+                        return newVal;
+                    });
+                });
+            }, 1000000);
+            // clearTimeout(timeout);
+            return res;
         });
 
-        // api.interceptors.request.use((config) => {
-        //     if (config.method !== 'get') return config;
-        //     console.log('Progress bar interceptor');
-        //     console.log(config);
-        //     return config;
-
-        //     // if (config.url?.includes('login')) {
-        //     //     return config;
-        //     // }
-
-        //     // const interval = setInterval(() => {
-        //     //     console.log(interval);
-        //     //     setDynamicWidth((val) => {
-        //     //         let newVal = val + 1;
-        //     //         if (newVal > 99 || !props.active) {
-        //     //             clearInterval(interval);
-        //     //         }
-        //     //         return newVal;
-        //     //     });
-        //     // }, 20);
-        // });
-
-        // api.interceptors.response.use((res) => {
-        //     console.log(res);
-        //     if ('accessToken' in res) return res;
-        //     const interval = setInterval(() => {
-        //         setDynamicWidth((val) => {
-        //             let newVal = val + 1;
-        //             if (newVal > 99) {
-        //                 clearInterval(interval);
-        //             }
-        //             return newVal;
-        //         });
-        //     }, 1);
-        //     if (dynamicWidth <= 100) {
-        //         return new Promise(resolve => {
-        //             setTimeout(() => {
-        //                 store.dispatch({ type: 'PROGRESS_BAR_OFF' });
-        //                 return resolve(res);
-        //             }, 100 - dynamicWidth + 500);
-        //         });
-        //     }
-        //     store.dispatch({ type: 'PROGRESS_BAR_OFF' });
-        //     return res;
-        // });
         return () => {
             api.interceptors.request.eject(progressInterceptor);
+            api.interceptors.request.eject(progressEndInterceptor);
+            // clearInterval(interval);
+            // clearInterval(secondInterval);
+            clearTimeout(timeout);
         }
     }, []);
 

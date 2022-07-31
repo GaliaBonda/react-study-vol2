@@ -3,30 +3,21 @@ import List from "./components/List/List";
 import './board.scss'
 import { Link, useParams } from "react-router-dom";
 import { connect } from "react-redux";
-import { editBoard, getBoard, postList } from "../../store/modules/board/actions";
+import { thunkEditBoard, thunkGetBoard, thunkPostList } from "../../store/modules/board/actions";
 import IBoard from "../../common/interfaces/IBoard";
 import { ChangeEvent, KeyboardEvent } from 'react';
-import { validateTitle } from "../../common/utils/functions";
+import { validateTitle } from "../../common/utils/validate";
 import AddModal from "../../components/AddModal/AddModal";
 import ProgressBar from "../../components/ProgressBar/ProgressBar";
+import { ThunkDispatch } from "redux-thunk";
+import { Dispatch } from "redux";
 
 
 interface Props {
     board: IBoard;
     getBoard: (id: string) => Promise<void>;
-    editBoard: (id: string, name: string) => Promise<void>;
-    postList: (id: string, name: string, position: string) => Promise<void>;
-};
-
-interface State {
-    board: IBoard;
-    editOn: boolean;
-    editedBoardTitle: string,
-    editedBoardIsValide: boolean,
-    warningText: string,
-    addListModalShown: boolean,
-    newListIsValide: boolean,
-    newListName: string,
+    editBoard: (id: string, title: string) => Promise<void>;
+    postList: (id: string, title: string, position: string) => Promise<void>;
 };
 
 function Board({ board, editBoard, getBoard, postList }: Props) {
@@ -36,12 +27,12 @@ function Board({ board, editBoard, getBoard, postList }: Props) {
     const [warningText, setWarningText] = useState("");
     const [addListModalShown, setAddListModalShown] = useState(false);
     const [newListIsValide, setNewListIsValide] = useState(false);
-    const [newListName, setNewListName] = useState("");
+    const [newListTitle, setNewListTitle] = useState("");
 
-    async function editBoardTitle(id: string, name: string) {
+    function editBoardTitle(id: string, title: string) {
         if (editedBoardIsValide) {
-            await editBoard(id, name);
-            await getBoard(id);
+            editBoard(id, title);
+            getBoard(id);
         } else {
             setWarningText('Invalid board title');
             setEditedBoardTitle(board?.title || "");
@@ -75,14 +66,14 @@ function Board({ board, editBoard, getBoard, postList }: Props) {
         setAddListModalShown(shown);
     }
 
-    function updateNewListName(name: string) {
-        setNewListName(name);
-        setNewListIsValide(validateTitle(name));
+    function updateNewListTitle(title: string) {
+        setNewListTitle(title);
+        setNewListIsValide(validateTitle(title));
     }
 
     async function addNewList() {
         setAddListModalShown(false);
-        await postList(board.id, newListName,
+        await postList(board.id, newListTitle,
             Object.keys(board.lists).length ? (Object.keys(board.lists).length + 1).toString() : "1");
         await getBoard(board.id);
     }
@@ -90,8 +81,6 @@ function Board({ board, editBoard, getBoard, postList }: Props) {
     const params = useParams();
     const boardId = params.boardID || "";
     useEffect(() => {
-
-
         getBoard(boardId);
     }, []);
 
@@ -119,7 +108,7 @@ function Board({ board, editBoard, getBoard, postList }: Props) {
             <button className="board__btn btn" onClick={() => toggleAddListModal(true)}>Add list</button>
             <AddModal title="Add new list" shown={addListModalShown} isValide={newListIsValide}
                 handleClose={() => toggleAddListModal(false)}
-                handleChange={updateNewListName}
+                handleChange={updateNewListTitle}
                 handleOk={addNewList} />
         </div>
 
@@ -127,9 +116,16 @@ function Board({ board, editBoard, getBoard, postList }: Props) {
     </div>);
 }
 
-const mapStateToProps = (state: State) => ({
+const mapStateToProps = (state: { board: IBoard }) => ({
     board: { ...state.board },
 });
 
-export default connect(mapStateToProps,
-    { getBoard, editBoard, postList })(Board);
+const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any> & Dispatch) => {
+    return {
+        editBoard: (id: string, title: string) => dispatch(thunkEditBoard(id, title)),
+        getBoard: (id: string) => dispatch(thunkGetBoard(id)),
+        postList: (id: string, title: string, position: string) => dispatch(thunkPostList(id, title, position)),
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Board);

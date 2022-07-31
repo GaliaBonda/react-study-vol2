@@ -3,19 +3,20 @@ import { useDispatch } from "react-redux";
 import { Action } from "redux";
 import { ThunkDispatch } from "redux-thunk";
 import IBoard from "../../../../common/interfaces/IBoard";
-import { validateTitle } from "../../../../common/utils/functions";
+import ICard from "../../../../common/interfaces/ICard";
+import { validateTitle } from "../../../../common/utils/validate";
 import { thunkEditCard } from "../../../../store/modules/board/actions";
 import './card.scss'
 
-interface Props {
-    title: string;
-    position: string;
-    id: string;
-    listId: string;
-    boardId: string;
-};
+// interface Props {
+//     title: string;
+//     position: string;
+//     id: string;
+//     listId: string;
+//     boardId: string;
+// };
 
-export default function Card({ title, position, id, listId, boardId }: Props) {
+export default function Card({ title, id, listId, boardId }: ICard) {
     const [editModeOn, setEditMode] = useState(false);
     const [editCardTitle, setCardTitle] = useState('');
     const [editCardValid, setEditCardValid] = useState(true);
@@ -33,7 +34,6 @@ export default function Card({ title, position, id, listId, boardId }: Props) {
     const editOff = () => {
         setEditMode(false);
         appDispatch(thunkEditCard(boardId, id, listId, editCardTitle, editCardValid));
-        // props.updateCardTitle();
     }
     const handleKeyDown = (e: KeyboardEvent) => {
         if (e.key === 'Enter') {

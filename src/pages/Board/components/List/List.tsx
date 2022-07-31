@@ -4,21 +4,22 @@ import { Action } from "redux";
 import { ThunkDispatch } from "redux-thunk";
 import IBoard from "../../../../common/interfaces/IBoard";
 import ICard from "../../../../common/interfaces/ICard";
-import { validateTitle } from "../../../../common/utils/functions";
+import IList from "../../../../common/interfaces/IList";
+import { validateTitle } from "../../../../common/utils/validate";
 import AddModal from "../../../../components/AddModal/AddModal";
 import { thunkEditList, thunkPostCard } from "../../../../store/modules/board/actions";
 import Card from "../Card/Card";
 import './list.scss'
 
-interface Props {
-    title: string;
-    cards: ICard[];
-    position: string;
-    id: string;
-    boardId: string;
+// interface Props {
+//     title: string;
+//     cards: ICard[];
+//     position: string;
+//     id: string;
+//     boardId: string;
+// };
 
-};
-export default function List({ title, cards, position, id, boardId }: Props) {
+export default function List({ title, cards, position, id, boardId }: IList) {
     const [editModeOn, setEditMode] = useState(false);
     const [inputValue, setInputValue] = useState('');
     const [titleValid, setTitleValid] = useState(true);

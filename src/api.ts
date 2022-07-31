@@ -1,6 +1,5 @@
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 import { api } from './common/constants';
-import store from './store/store';
 import { history } from './common/utils/history';
 
 const instance = axios.create({
@@ -15,6 +14,7 @@ instance.interceptors.request.use(async function (config) {
   const token = localStorage.getItem('accessToken');
   if (!token) {
     // history.push('/auth');
+
     let res: { accessToken: string, refreshToken: string } = await instance.post('/login', {
       email: api.testEmail, password: api.testPassword,
     });
@@ -22,6 +22,7 @@ instance.interceptors.request.use(async function (config) {
     localStorage.setItem('refreshToken', res.refreshToken);
   }
   config.headers = { "Authorization": 'Bearer ' + token }
+  // history.back();
 
   return config;
 }, () => {
@@ -40,7 +41,9 @@ instance.interceptors.response.use((res) => {
     const refreshedToken: { accessToken: string, refreshToken: string } = await instance.post('/refresh', {
       refreshToken: localStorage.getItem('refreshToken'),
     });
-    axios.defaults.headers.common['Authorization'] = 'Bearer ' + refreshedToken.accessToken;
+    localStorage.setItem('accessToken', refreshedToken.accessToken);
+    localStorage.setItem('refreshToken', refreshedToken.refreshToken);
+    // axios.defaults.headers.common['Authorization'] = 'Bearer ' + refreshedToken.accessToken;
     return instance(originalRequest);
   }
 });
