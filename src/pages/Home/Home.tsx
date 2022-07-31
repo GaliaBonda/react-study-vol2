@@ -18,14 +18,18 @@ interface Props {
 
 }
 
+// type stateType = {
+//     boards: IBoard[];
+// };
 interface State {
-  boards?: IBoard[];
+  boards: IBoard[];
   addModalShown: boolean;
   newBoardTitle: string;
   newBoardIsValide: boolean;
 };
 
 function Home({ boards, getBoards, postBoard }: Props) {
+  // const { boards, getBoards, postBoard } = props;
   const [addModalShown, setAddModalShown] = useState(false);
   const [newBoardTitle, setNewBoardTItle] = useState('');
   const [newBoardValide, setNewBoardValide] = useState(false);
@@ -82,9 +86,12 @@ function Home({ boards, getBoards, postBoard }: Props) {
   </div>);
 }
 
-const mapStateToProps = (state: State) => ({
-  ...state.boards,
-});
+// const mapStateToProps = (state: State) => ({
+//   ...state.boards,
+// });
+const mapStateToProps = (state: State) => {
+  return { boards: [...state.boards] }
+};
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any> & Dispatch) => {
   return {

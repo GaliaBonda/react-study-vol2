@@ -10,11 +10,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="board">
-          <Route path=":boardID" element={<Board board={{
-            id: "",
-            title: "string",
-            lists: [],
-          }} />} />
+          <Route path=":boardID" element={<Board />} />
         </Route>
         <Route path="/" element={<Home />}>
         </Route>
@@ -24,7 +20,4 @@ function App() {
 }
 
 export default App;
-function createBrowserHistory() {
-  throw new Error('Function not implemented.');
-}
 

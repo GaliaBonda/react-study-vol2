@@ -13,24 +13,24 @@ export default function ProgressBar(props: PropsType) {
     const [barIsVisible, setBarVisible] = useState(false);
 
     useEffect(() => {
-        console.log('progress bar use effect');
+        // console.log('progress bar use effect');
 
         let progressInterceptor = api.interceptors.request.use((config) => {
-            console.log(config);
+            // console.log(config);
             return config;
-            
+
         });
-        
+
         // api.interceptors.request.use((config) => {
         //     if (config.method !== 'get') return config;
         //     console.log('Progress bar interceptor');
         //     console.log(config);
         //     return config;
-            
+
         //     // if (config.url?.includes('login')) {
         //     //     return config;
         //     // }
-            
+
         //     // const interval = setInterval(() => {
         //     //     console.log(interval);
         //     //     setDynamicWidth((val) => {

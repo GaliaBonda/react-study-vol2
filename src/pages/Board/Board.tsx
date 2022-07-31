@@ -19,7 +19,7 @@ interface Props {
 };
 
 interface State {
-    board?: IBoard;
+    board: IBoard;
     editOn: boolean;
     editedBoardTitle: string,
     editedBoardIsValide: boolean,
@@ -128,7 +128,7 @@ function Board({ board, editBoard, getBoard, postList }: Props) {
 }
 
 const mapStateToProps = (state: State) => ({
-    ...state.board,
+    board: { ...state.board },
 });
 
 export default connect(mapStateToProps,

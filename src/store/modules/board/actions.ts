@@ -9,7 +9,7 @@ export const getBoard = (id: string) => async (dispatch: Dispatch) => {
   try {
     const data: IBoard = await api.get(`/board/${id}`);
     const lists: IList[] = Object.values(data.lists).map(
-      (value: any) => {
+      (value: IList) => {
         return { ...value, cards: Object.values(value.cards) };
       });
     dispatch({ type: 'GET_BOARD', payload: { ...data, id: id, lists: [...lists] } });

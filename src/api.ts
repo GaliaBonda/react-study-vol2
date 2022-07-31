@@ -23,17 +23,17 @@ const instance = axios.create({
 // });
 instance.interceptors.request.use(async function (config) {
   console.log('api interceptor');
-  
+
   if (config.url?.includes('login')) return config;
 
-  if (!store.getState().common.common.token.accestoken) {
+  if (!store.getState().common.token.accestoken) {
     let res: AxiosResponse & { accessToken: string, refreshToken: string } = await instance.post('/login', {
       email: "test@gmail.com", password: "testpass"
     });
     store.dispatch({ type: 'AUTHORIZE', payload: { accestoken: res.accessToken, refreshtoken: res.refreshToken } });
 
   }
-  const token = store.getState().common.common.token.accestoken;
+  const token = store.getState().common.token.accestoken;
   // console.log(token);
 
   if (config.headers) config.headers.Authorization = 'Bearer ' + token;
@@ -54,7 +54,7 @@ instance.interceptors.response.use((res) => {
     originalRequest.retry = true;
 
     const refreshedToken: AxiosResponse & { accessToken: string, refreshToken: string } = await instance.post('/refresh', {
-      refreshToken: store.getState().common.common.token.refreshtoken,
+      refreshToken: store.getState().common.token.refreshtoken,
     });
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + refreshedToken.accessToken;
     store.dispatch({
