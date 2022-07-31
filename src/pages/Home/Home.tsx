@@ -18,9 +18,6 @@ interface Props {
 
 }
 
-// type stateType = {
-//     boards: IBoard[];
-// };
 interface State {
   boards?: IBoard[];
   addModalShown: boolean;
@@ -28,8 +25,7 @@ interface State {
   newBoardIsValide: boolean;
 };
 
-function Home(props: Props) {
-  const { boards, getBoards, postBoard } = props;
+function Home({ boards, getBoards, postBoard }: Props) {
   const [addModalShown, setAddModalShown] = useState(false);
   const [newBoardTitle, setNewBoardTItle] = useState('');
   const [newBoardValide, setNewBoardValide] = useState(false);

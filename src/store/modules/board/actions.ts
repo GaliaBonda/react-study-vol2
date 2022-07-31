@@ -3,13 +3,18 @@ import { AnyAction, Dispatch } from "redux";
 import { ThunkAction } from "redux-thunk";
 import api from "../../../api";
 import IBoard from "../../../common/interfaces/IBoard";
+import IList from "../../../common/interfaces/IList";
 
 export const getBoard = (id: string) => async (dispatch: Dispatch) => {
   try {
-    const data: { board: IBoard } = await api.get(`/board/${id}`);
-    dispatch({ type: 'GET_BOARD', payload: { ...data, id: id } });
+    const data: IBoard = await api.get(`/board/${id}`);
+    const lists: IList[] = Object.values(data.lists).map(
+      (value: any) => {
+        return { ...value, cards: Object.values(value.cards) };
+      });
+    dispatch({ type: 'GET_BOARD', payload: { ...data, id: id, lists: [...lists] } });
   } catch (e) {
-    console.log(e)
+    console.error(e)
     dispatch({ type: 'ERROR_ACTION_TYPE' });
   }
 }
@@ -31,12 +36,12 @@ export const postList =
     async (dispatch: Dispatch): Promise<void> => {
       try {
         const list = {
-          title: title,
-          position: position,
+          title,
+          position,
         };
 
         await api.post(`/board/${id}/list`, list);
-        await dispatch({ type: 'POST_LIST', payload: { ...list } });
+        await dispatch({ type: 'POST_LIST', payload: { ...list, id } });
       } catch (e) {
         console.error(e);
         dispatch({ type: 'ERROR_ACTION_TYPE' });
@@ -46,8 +51,8 @@ export const postList =
 export const thunkEditList =
   (boardId: string, listId: string, title: string, position: string, valid: boolean) =>
     async (dispatch: Dispatch): Promise<void> => {
+      if (!valid) return;
       try {
-        if (!valid) return;
         const list = {
           title: title,
           position: position,
@@ -76,9 +81,10 @@ export const editList =
       }
     };
 
-export const postCard =
+export const thunkPostCard =
   (id: string, listId: string, title: string, valid: boolean, position: string) =>
     async (dispatch: Dispatch): Promise<void> => {
+      if (!valid) return;
       try {
         const card = {
           title: title,
@@ -100,9 +106,10 @@ export const postCard =
       }
     };
 
-export const editCard =
-  (id: string, cardId: string, listId: string, title: string) =>
+export const thunkEditCard =
+  (id: string, cardId: string, listId: string, title: string, valid: boolean) =>
     async (dispatch: Dispatch): Promise<void> => {
+      if (!valid) return;
       try {
         const card = {
           title: title,

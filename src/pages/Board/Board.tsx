@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import List from "./components/List/List";
 import './board.scss'
-import { Link, Params, useParams } from "react-router-dom";
-import { withRouter } from "../../common/utils/withRouter";
+import { Link, useParams } from "react-router-dom";
 import { connect } from "react-redux";
-import { editBoard, editList, getBoard, postList, postCard, editCard } from "../../store/modules/board/actions";
+import { editBoard, getBoard, postList } from "../../store/modules/board/actions";
 import IBoard from "../../common/interfaces/IBoard";
 import { ChangeEvent, KeyboardEvent } from 'react';
 import { validateTitle } from "../../common/utils/functions";
@@ -17,9 +16,6 @@ interface Props {
     getBoard: (id: string) => Promise<void>;
     editBoard: (id: string, name: string) => Promise<void>;
     postList: (id: string, name: string, position: string) => Promise<void>;
-    editList: (boardId: string, listId: string, title: string, position: string) => Promise<void>;
-    // postCard: (id: string, listId: string, title: string, position: string) => Promise<void>;
-    editCard: (id: string, cardId: string, listId: string, title: string) => Promise<void>;
 };
 
 interface State {
@@ -31,16 +27,9 @@ interface State {
     addListModalShown: boolean,
     newListIsValide: boolean,
     newListName: string,
-    editedListTitle: string,
-    editedListTitleValid: boolean,
-    newCardName: string,
-    newCardIsValide: boolean,
-    editedCardTitle: string,
-    editedCardTitleValid: boolean,
 };
 
-function Board(props: Props) {
-    const [newCardIsValide, setCardIsValide] = useState(false);
+function Board({ board, editBoard, getBoard, postList }: Props) {
     const [editOn, setEditOn] = useState(false);
     const [editedBoardTitle, setEditedBoardTitle] = useState("");
     const [editedBoardIsValide, setEditedBoardIsValide] = useState(true);
@@ -48,41 +37,27 @@ function Board(props: Props) {
     const [addListModalShown, setAddListModalShown] = useState(false);
     const [newListIsValide, setNewListIsValide] = useState(false);
     const [newListName, setNewListName] = useState("");
-    const [editedListTitle, setEditedListTitle] = useState("");
-    const [editedListTitleValid, setEditedListTitleValid] = useState(true);
-    const [newCardName, setNewCardName] = useState("");
-    const [editedCardTitle, setEditedCardTitle] = useState("");
-    const [editedCardTitleValid, setEditedCardTitleValid] = useState(true);
 
-    async function editBoard(id: string, name: string) {
+    async function editBoardTitle(id: string, name: string) {
         if (editedBoardIsValide) {
-            await props.editBoard(id, name);
-            await props.getBoard(id);
+            await editBoard(id, name);
+            await getBoard(id);
         } else {
             setWarningText('Invalid board title');
-            setEditedBoardTitle(props.board?.title || "");
+            setEditedBoardTitle(board?.title || "");
         }
-
-
     }
 
     function toggleEdit() {
         setEditOn(true);
         setWarningText("");
-
-        setEditedBoardTitle(props.board.title);
-        setEditedBoardIsValide(validateTitle(props.board.title));
+        setEditedBoardTitle(board.title);
+        setEditedBoardIsValide(validateTitle(board.title));
     }
 
     function editOff() {
         setEditOn(false);
-        editBoard(props.board.id, editedBoardTitle);
-
-    }
-
-    function handleChange(e: ChangeEvent<HTMLInputElement>) {
-        setEditedBoardTitle(e.target.value);
-        setEditedBoardIsValide(validateTitle(e.target.value));
+        editBoardTitle(board.id, editedBoardTitle);
     }
 
     function handleKeyUp(e: KeyboardEvent) {
@@ -91,13 +66,13 @@ function Board(props: Props) {
         }
     }
 
-    function showAddListModal() {
-        setAddListModalShown(true);
-
+    function handleChange(e: ChangeEvent<HTMLInputElement>) {
+        setEditedBoardTitle(e.target.value);
+        setEditedBoardIsValide(validateTitle(e.target.value));
     }
 
-    function closeAddModal() {
-        setAddListModalShown(false);
+    function toggleAddListModal(shown: boolean) {
+        setAddListModalShown(shown);
     }
 
     function updateNewListName(name: string) {
@@ -107,40 +82,9 @@ function Board(props: Props) {
 
     async function addNewList() {
         setAddListModalShown(false);
-        await props.postList(props.board.id, newListName,
-            Object.keys(props.board.lists).length ? (Object.keys(props.board.lists).length + 1).toString() : "1");
-        await props.getBoard(props.board.id);
-    }
-
-    function editListTitle(e: ChangeEvent<HTMLInputElement>) {
-        setEditedListTitle(e.target.value);
-        setEditedListTitleValid(validateTitle(e.target.value));
-
-    }
-    function updateNewCardName(title: string) {
-        setNewCardName(title);
-        setCardIsValide(validateTitle(title));
-    }
-
-    // async function addNewCard(id: string, position: string) {
-    //     if (newCardIsValide) {
-    //         await props.postCard(props.board.id, id, newCardName, position);
-    //         await props.getBoard(props.board.id);
-
-    //     }
-    // }
-
-    function editCard(e: ChangeEvent<HTMLInputElement>) {
-        setEditedCardTitle(e.target.value);
-        setEditedCardTitleValid(validateTitle(e.target.value));
-    }
-
-    async function updateCardTitle(cardId: string, listId: string) {
-        if (editedCardTitleValid) {
-            await props.editCard(props.board.id, cardId, listId, editedCardTitle);
-            await props.getBoard(props.board.id);
-        }
-
+        await postList(board.id, newListName,
+            Object.keys(board.lists).length ? (Object.keys(board.lists).length + 1).toString() : "1");
+        await getBoard(board.id);
     }
 
     const params = useParams();
@@ -148,26 +92,9 @@ function Board(props: Props) {
     useEffect(() => {
 
 
-        props.getBoard(boardId);
+        getBoard(boardId);
     }, []);
 
-    let lists: JSX.Element[];
-    if (props.board.lists && JSON.stringify(props.board.lists) !== '{}') {
-        lists = props.board.lists.map((item, index) => {
-            return <List title={item.title} id={item.id} boardId={boardId} handleChange={editListTitle}
-                cards={item.cards ? item.cards : []}
-                key={item.id} position={item.position}
-                newCardIsValide={newCardIsValide}
-                updateNewCardName={updateNewCardName}
-                // addNewCard={() => addNewCard(item.id, item.cards ? (Object.values(item.cards).length + 1).toString() : "1")}
-                handleCardChange={editCard} editedCardTitle={editedCardTitle}
-                updateCardTitle={(cardId) => updateCardTitle(cardId, item.id)}
-            />
-        });
-    } else {
-        lists = [];
-    }
-    let { board } = props;
 
     return (<div className="board">
         <Link className="board__link" to="/">Home</Link>
@@ -180,10 +107,18 @@ function Board(props: Props) {
                 <span className="board__title-id"> {board.id}</span>
             </h1>
             {(warningText.length > 0) && <p className="warning board__warning">{warningText}</p>}
-            <ul className="board__list">{lists}</ul>
-            <button className="board__btn btn" onClick={showAddListModal}>Add list</button>
+            <ul className="board__list">
+                {board.lists.map((item, index) => {
+                    return <List title={item.title} id={item.id} boardId={boardId}
+                        cards={item.cards ? item.cards : []}
+                        key={item.id} position={item.position}
+                    />
+                })
+                }
+            </ul>
+            <button className="board__btn btn" onClick={() => toggleAddListModal(true)}>Add list</button>
             <AddModal title="Add new list" shown={addListModalShown} isValide={newListIsValide}
-                handleClose={closeAddModal}
+                handleClose={() => toggleAddListModal(false)}
                 handleChange={updateNewListName}
                 handleOk={addNewList} />
         </div>
@@ -197,4 +132,4 @@ const mapStateToProps = (state: State) => ({
 });
 
 export default connect(mapStateToProps,
-    { getBoard, editBoard, postList, editList, postCard, editCard })(Board);
+    { getBoard, editBoard, postList })(Board);
