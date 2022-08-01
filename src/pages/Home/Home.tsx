@@ -28,12 +28,12 @@ interface State {
 function Home({ boards, getBoards, postBoard }: Props) {
   // const { boards, getBoards, postBoard } = props;
   const [addModalShown, setAddModalShown] = useState(false);
-  const [newBoardTitle, setNewBoardTItle] = useState('');
+  const [newBoardTitle, setNewBoardTitle] = useState('');
   const [newBoardValide, setNewBoardValide] = useState(false);
 
 
   useEffect(() => {
-    getBoards()
+    getBoards();
   }, []);
 
   const addBoard = () => {
@@ -41,7 +41,7 @@ function Home({ boards, getBoards, postBoard }: Props) {
 
   }
   const updateNewBoardName = (name: string) => {
-    setNewBoardTItle(name);
+    setNewBoardTitle(name);
     setNewBoardValide(validateTitle(name));
 
   }
