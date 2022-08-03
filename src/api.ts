@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { api } from './common/constants';
 import { history } from './common/utils/history';
+import store from './store/store';
 
 const instance = axios.create({
   baseURL: api.baseURL,
@@ -21,7 +22,7 @@ instance.interceptors.request.use(async function (config) {
     localStorage.setItem('accessToken', res.accessToken);
     localStorage.setItem('refreshToken', res.refreshToken);
   }
-  config.headers = { "Authorization": 'Bearer ' + token }
+  config.headers = { "Authorization": 'Bearer ' + localStorage.getItem('accessToken') }
   // history.back();
 
   return config;
@@ -30,22 +31,63 @@ instance.interceptors.request.use(async function (config) {
 
 });
 
+instance.interceptors.request.use(async function (config) {
+  if (config.method !== 'get') return config;
+
+  store.dispatch({ type: 'SHOW_PROGRESS_BAR' });
+
+
+
+  return config;
+}, () => {
+  console.error('error');
+
+});
+
+instance.interceptors.response.use((res) => {
+  if (res.config.method !== 'get') return res;
+  store.dispatch({ type: 'CLOSE_PROGRESS_BAR' });
+
+  return res;
+}, function (error) {
+  return Promise.reject(error);
+
+});
+
 instance.interceptors.response.use((res) => {
   return res.data;
 }, async function (error) {
 
-  const originalRequest = error.config;
-  if (error.response.status === 401 && !originalRequest.retry) {
-    originalRequest.retry = true;
+  // const originalRequest = error.config;
 
-    const refreshedToken: { accessToken: string, refreshToken: string } = await instance.post('/refresh', {
-      refreshToken: localStorage.getItem('refreshToken'),
-    });
-    localStorage.setItem('accessToken', refreshedToken.accessToken);
-    localStorage.setItem('refreshToken', refreshedToken.refreshToken);
+
+  if (error.response.status === 401) {
+    const oldRefreshToken = localStorage.getItem('refreshToken');
+    if (oldRefreshToken) {
+      try {
+        const refreshedToken: { accessToken: string, refreshToken: string } = await instance.post('/refresh', {
+          refreshToken: oldRefreshToken,
+        });
+        localStorage.setItem('accessToken', refreshedToken.accessToken);
+        localStorage.setItem('refreshToken', refreshedToken.refreshToken);
+        error.config.headers = {
+          ...error.config.header,
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        }
+        return instance.request(error.config);
+      } catch (error) {
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+      }
+
+    }
+
     // axios.defaults.headers.common['Authorization'] = 'Bearer ' + refreshedToken.accessToken;
-    return instance(originalRequest);
+
   }
+  return Promise.reject(error);
 });
+
+
 
 export default instance;

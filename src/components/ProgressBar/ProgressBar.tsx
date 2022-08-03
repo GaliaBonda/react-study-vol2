@@ -1,21 +1,29 @@
 import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
 import api from '../../api';
 import './progressbar.scss'
 
-type PropsType = {
-    title: string;
+interface Props {
+    title: string,
+    progress: { shown: boolean },
 }
+
+interface State {
+    progress: { shown: boolean },
+};
 
 
 let interval: NodeJS.Timer;
 let secondInterval: NodeJS.Timer;
 let timeout: NodeJS.Timeout;
 
-export default function ProgressBar(props: PropsType) {
+function ProgressBar(props: Props) {
     const [dynamicWidth, setDynamicWidth] = useState(0);
     // const [barIsVisible, setBarVisible] = useState(false);
 
     useEffect(() => {
+        console.log(props.progress);
+
         if (dynamicWidth < 100) {
             setDynamicWidth((val) => (val + 2));
         }
@@ -115,10 +123,21 @@ export default function ProgressBar(props: PropsType) {
     // }, []);
 
 
-    return (<div className="progress-bar">
-        <h2 className="progress-bar__title">{props.title}</h2>
-        <div className="progress-bar__outer">
-            <div className="progress-bar__inner" style={{ 'width': dynamicWidth + '%' }}></div>
-        </div>
-    </div>);
+    return (<>
+        {props.progress.shown ? (<div className="progress-bar">
+            <h2 className="progress-bar__title">{props.title}</h2>
+            <div className="progress-bar__outer">
+                <div className="progress-bar__inner" style={{ 'width': dynamicWidth + '%' }}></div>
+            </div>
+        </div>) : null}
+
+    </>);
 }
+
+const mapStateToProps = (state: State) => {
+    return { progress: { ...state.progress } }
+};
+
+
+
+export default connect(mapStateToProps)(ProgressBar);
