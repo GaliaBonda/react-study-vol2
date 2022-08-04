@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { api } from './common/constants';
 import { history } from './common/utils/history';
+import { showProgress } from './store/modules/progress/actions';
 import store from './store/store';
 
 const instance = axios.create({
@@ -34,7 +35,7 @@ instance.interceptors.request.use(async function (config) {
 instance.interceptors.request.use(async function (config) {
   if (config.method !== 'get') return config;
 
-  store.dispatch({ type: 'SHOW_PROGRESS_BAR' });
+  store.dispatch(showProgress(true));
 
 
 
@@ -46,7 +47,7 @@ instance.interceptors.request.use(async function (config) {
 
 instance.interceptors.response.use((res) => {
   if (res.config.method !== 'get') return res;
-  store.dispatch({ type: 'CLOSE_PROGRESS_BAR' });
+  store.dispatch(showProgress(false));
 
   return res;
 }, function (error) {

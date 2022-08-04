@@ -22,7 +22,7 @@ function ProgressBar(props: Props) {
     // const [barIsVisible, setBarVisible] = useState(false);
 
     useEffect(() => {
-        console.log(props.progress);
+        // console.log(props.progress);
 
         if (dynamicWidth < 100) {
             setDynamicWidth((val) => (val + 2));

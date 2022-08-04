@@ -13,6 +13,7 @@ import { Dispatch } from "redux";
 
 interface Props {
   boards?: IBoard[];
+  progress: { shown: boolean };
   getBoards: () => Promise<void>;
   postBoard: (title: string) => Promise<void>;
 
@@ -20,12 +21,13 @@ interface Props {
 
 interface State {
   boards: IBoard[];
+  progress: { shown: boolean };
   addModalShown: boolean;
   newBoardTitle: string;
   newBoardIsValide: boolean;
 };
 
-function Home({ boards, getBoards, postBoard }: Props) {
+function Home({ boards, getBoards, postBoard, progress }: Props) {
   // const { boards, getBoards, postBoard } = props;
   const [addModalShown, setAddModalShown] = useState(false);
   const [newBoardTitle, setNewBoardTitle] = useState('');
@@ -60,9 +62,8 @@ function Home({ boards, getBoards, postBoard }: Props) {
 
   return (<div className="home">
     {/* <button className="btn home__btn autorization-btn" onClick={this.autorize}>Test Autorization</button> */}
-    {/* {this.props.progressBar && <ProgressBar title="Boards processing..."/>}     */}
     <ProgressBar title="Boards processing..." />
-    <ul className="home__list boards">
+    {!progress.shown && <ul className="home__list boards">
       {boards?.map((item, index) => {
         return (
           <Link className="home__board-link"
@@ -74,7 +75,7 @@ function Home({ boards, getBoards, postBoard }: Props) {
 
         );
       })}
-    </ul>
+    </ul>}
     <button className="btn home__btn" onClick={addBoard}>Add board</button>
     <AddModal title="Add new board" isValide={newBoardValide} shown={addModalShown}
       handleClose={closeAddModal}
@@ -84,7 +85,7 @@ function Home({ boards, getBoards, postBoard }: Props) {
 }
 
 const mapStateToProps = (state: State) => {
-  return { boards: [...state.boards] }
+  return { boards: [...state.boards], progress: { ...state.progress } }
 };
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any> & Dispatch) => {
