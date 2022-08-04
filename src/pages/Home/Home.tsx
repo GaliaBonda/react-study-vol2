@@ -10,10 +10,11 @@ import './home.scss';
 import ProgressBar from "../../components/ProgressBar/ProgressBar";
 import { ThunkDispatch } from "redux-thunk";
 import { Dispatch } from "redux";
+import Messages from 'react-error';
 
 interface Props {
   boards?: IBoard[];
-  progress: { shown: boolean };
+  progress: IProgress;
   getBoards: () => Promise<void>;
   postBoard: (title: string) => Promise<void>;
 
@@ -21,7 +22,7 @@ interface Props {
 
 interface State {
   boards: IBoard[];
-  progress: { shown: boolean };
+  progress: IProgress;
   addModalShown: boolean;
   newBoardTitle: string;
   newBoardIsValide: boolean;
@@ -61,6 +62,7 @@ function Home({ boards, getBoards, postBoard, progress }: Props) {
   }
 
   return (<div className="home">
+    <h1 className="home__title">Boards &#129304;</h1>
     {/* <button className="btn home__btn autorization-btn" onClick={this.autorize}>Test Autorization</button> */}
     <ProgressBar title="Boards processing..." />
     {!progress.shown && <ul className="home__list boards">
@@ -81,6 +83,7 @@ function Home({ boards, getBoards, postBoard, progress }: Props) {
       handleClose={closeAddModal}
       handleChange={updateNewBoardName}
       handleOk={addNewBoard} />
+    <Messages messages={{ isVisible: false }} />
   </div>);
 }
 

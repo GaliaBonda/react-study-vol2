@@ -9,7 +9,12 @@ body {
     padding: 1em;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     margin: 0;
 }
 
@@ -29,7 +34,9 @@ input:focus {
     background-color: white;
     border-radius: 3%;
     padding: 0.5em;
-    &:focus, &:hover {
+
+    &:focus,
+    &:hover {
         box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, 0.2);
     }
 }
@@ -39,8 +46,16 @@ input:focus {
 }
 
 .home {
-    padding: 8em 2em;
+    padding: 2em;
     position: relative;
+
+    &__title {
+        text-transform: uppercase;
+        font-size: 2em;
+        text-align: center;
+        margin-bottom: 1em;
+    }
+
     &__list {
         display: flex;
         flex-wrap: wrap;
@@ -48,19 +63,23 @@ input:focus {
         justify-content: space-around;
 
     }
+
     &__link {
         color: black;
         position: absolute;
         top: 1em;
         left: 1em;
     }
+
     &__btn {
         display: block;
         margin-top: 3em;
     }
+
     &__board-link {
         color: rgb(107, 102, 102);
     }
+
     &__board-link:hover {
         color: rgb(46, 45, 45);
     }

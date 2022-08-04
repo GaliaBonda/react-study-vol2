@@ -3,6 +3,7 @@ import { api } from './common/constants';
 import { history } from './common/utils/history';
 import { showProgress } from './store/modules/progress/actions';
 import store from './store/store';
+import * as messageActions from 'react-error/actions';
 
 const instance = axios.create({
   baseURL: api.baseURL,
@@ -28,6 +29,7 @@ instance.interceptors.request.use(async function (config) {
 
   return config;
 }, () => {
+
   console.error('error');
 
 });
@@ -51,6 +53,7 @@ instance.interceptors.response.use((res) => {
 
   return res;
 }, function (error) {
+  store.dispatch(messageActions.setMessageText(error.message));
   return Promise.reject(error);
 
 });
@@ -62,7 +65,7 @@ instance.interceptors.response.use((res) => {
   // const originalRequest = error.config;
 
 
-  if (error.response.status === 401) {
+  if (error.response.status === 401 && error.response.statusText === "Unauthorized") {
     const oldRefreshToken = localStorage.getItem('refreshToken');
     if (oldRefreshToken) {
       try {
@@ -85,7 +88,11 @@ instance.interceptors.response.use((res) => {
 
     // axios.defaults.headers.common['Authorization'] = 'Bearer ' + refreshedToken.accessToken;
 
+  } else {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
   }
+  store.dispatch(messageActions.setMessageText(error.message));
   return Promise.reject(error);
 });
 

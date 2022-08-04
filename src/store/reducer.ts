@@ -3,10 +3,12 @@ import boardReducer from './modules/board/reducer';
 import boardsReducer from './modules/boards/reducer';
 import userReducer from './modules/user/reducer';
 import progressReducer from './modules/progress/reducer';
+import message from 'react-error/reducer';
 
 export default combineReducers({
     board: boardReducer,
     boards: boardsReducer,
     user: userReducer,
     progress: progressReducer,
+    messages: message,
 });

@@ -15,12 +15,18 @@ import { Dispatch } from "redux";
 
 interface Props {
     board: IBoard;
+    progress: IProgress;
     getBoard: (id: string) => Promise<void>;
     editBoard: (id: string, title: string) => Promise<void>;
     postList: (id: string, title: string, position: string) => Promise<void>;
 };
 
-function Board({ board, editBoard, getBoard, postList }: Props) {
+interface State {
+    board: IBoard;
+    progress: IProgress;
+};
+
+function Board({ board, editBoard, getBoard, postList, progress }: Props) {
     const [editOn, setEditOn] = useState(false);
     const [editedBoardTitle, setEditedBoardTitle] = useState("");
     const [editedBoardIsValide, setEditedBoardIsValide] = useState(true);
@@ -96,15 +102,15 @@ function Board({ board, editBoard, getBoard, postList }: Props) {
                 <span className="board__title-id"> {board.id}</span>
             </h1>
             {(warningText.length > 0) && <p className="warning board__warning">{warningText}</p>}
-            <ul className="board__list">
-                {board.lists.map((item, index) => {
+            {!progress.shown && <ul className="board__list">
+                {board.lists.map((item) => {
                     return <List title={item.title} id={item.id} boardId={boardId}
                         cards={item.cards ? item.cards : []}
                         key={item.id} position={item.position}
                     />
                 })
                 }
-            </ul>
+            </ul>}
             <button className="board__btn btn" onClick={() => toggleAddListModal(true)}>Add list</button>
             <AddModal title="Add new list" shown={addListModalShown} isValide={newListIsValide}
                 handleClose={() => toggleAddListModal(false)}
@@ -116,8 +122,9 @@ function Board({ board, editBoard, getBoard, postList }: Props) {
     </div>);
 }
 
-const mapStateToProps = (state: { board: IBoard }) => ({
+const mapStateToProps = (state: State) => ({
     board: { ...state.board },
+    progress: { ...state.progress },
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any> & Dispatch) => {
