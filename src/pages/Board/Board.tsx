@@ -11,6 +11,7 @@ import AddModal from "../../components/AddModal/AddModal";
 import ProgressBar from "../../components/ProgressBar/ProgressBar";
 import { ThunkDispatch } from "redux-thunk";
 import { Dispatch } from "redux";
+import IProgress from "../../common/interfaces/IProgress";
 
 
 interface Props {

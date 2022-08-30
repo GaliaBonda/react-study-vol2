@@ -1,3 +1,3 @@
-interface IProgress {
+export default interface IProgress {
     shown: boolean;
 }

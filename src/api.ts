@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { api } from './common/constants';
 import { history } from './common/utils/history';
+import { showError } from './store/modules/error/actions';
 import { showProgress } from './store/modules/progress/actions';
 import store from './store/store';
-import * as messageActions from 'react-error/actions';
 
 const instance = axios.create({
   baseURL: api.baseURL,
@@ -53,7 +53,7 @@ instance.interceptors.response.use((res) => {
 
   return res;
 }, function (error) {
-  store.dispatch(messageActions.setMessageText(error.message));
+  store.dispatch(showError(true, error.message));
   return Promise.reject(error);
 
 });
@@ -92,7 +92,7 @@ instance.interceptors.response.use((res) => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
   }
-  store.dispatch(messageActions.setMessageText(error.message));
+
   return Promise.reject(error);
 });
 

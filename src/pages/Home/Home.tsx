@@ -10,11 +10,15 @@ import './home.scss';
 import ProgressBar from "../../components/ProgressBar/ProgressBar";
 import { ThunkDispatch } from "redux-thunk";
 import { Dispatch } from "redux";
-import Messages from 'react-error';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import IError from "../../common/interfaces/IError";
+import IProgress from "../../common/interfaces/IProgress";
 
 interface Props {
   boards?: IBoard[];
   progress: IProgress;
+  error: IError;
   getBoards: () => Promise<void>;
   postBoard: (title: string) => Promise<void>;
 
@@ -23,20 +27,25 @@ interface Props {
 interface State {
   boards: IBoard[];
   progress: IProgress;
+  error: IError;
   addModalShown: boolean;
   newBoardTitle: string;
   newBoardIsValide: boolean;
 };
 
-function Home({ boards, getBoards, postBoard, progress }: Props) {
+function Home({ boards, getBoards, postBoard, progress, error }: Props) {
   // const { boards, getBoards, postBoard } = props;
   const [addModalShown, setAddModalShown] = useState(false);
   const [newBoardTitle, setNewBoardTitle] = useState('');
   const [newBoardValide, setNewBoardValide] = useState(false);
 
+  const notify = (errorMessage: string) => toast(errorMessage);
 
   useEffect(() => {
     getBoards();
+    console.log(error);
+
+    if (error.shown) notify(error.message);
   }, []);
 
   const addBoard = () => {
@@ -65,6 +74,16 @@ function Home({ boards, getBoards, postBoard, progress }: Props) {
     <h1 className="home__title">Boards &#129304;</h1>
     {/* <button className="btn home__btn autorization-btn" onClick={this.autorize}>Test Autorization</button> */}
     <ProgressBar title="Boards processing..." />
+
+    <ToastContainer position="top-right"
+      autoClose={5000}
+      hideProgressBar={true}
+      newestOnTop={false}
+      closeOnClick
+      rtl={false}
+      pauseOnFocusLoss
+      draggable
+      pauseOnHover />
     {!progress.shown && <ul className="home__list boards">
       {boards?.map((item, index) => {
         return (
@@ -83,12 +102,11 @@ function Home({ boards, getBoards, postBoard, progress }: Props) {
       handleClose={closeAddModal}
       handleChange={updateNewBoardName}
       handleOk={addNewBoard} />
-    <Messages messages={{ isVisible: false }} />
   </div>);
 }
 
 const mapStateToProps = (state: State) => {
-  return { boards: [...state.boards], progress: { ...state.progress } }
+  return { boards: [...state.boards], progress: { ...state.progress }, error: { ...state.error } }
 };
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any> & Dispatch) => {
