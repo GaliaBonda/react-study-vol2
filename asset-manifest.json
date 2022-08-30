@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "//galiabonda.github.io/react-study-vol2/static/css/main.acf11542.css",
-    "main.js": "//galiabonda.github.io/react-study-vol2/static/js/main.34850883.js",
+    "main.js": "//galiabonda.github.io/react-study-vol2/static/js/main.e602e849.js",
     "index.html": "//galiabonda.github.io/react-study-vol2/index.html",
     "main.acf11542.css.map": "//galiabonda.github.io/react-study-vol2/static/css/main.acf11542.css.map",
-    "main.34850883.js.map": "//galiabonda.github.io/react-study-vol2/static/js/main.34850883.js.map"
+    "main.e602e849.js.map": "//galiabonda.github.io/react-study-vol2/static/js/main.e602e849.js.map"
   },
   "entrypoints": [
     "static/css/main.acf11542.css",
-    "static/js/main.34850883.js"
+    "static/js/main.e602e849.js"
   ]
 }
